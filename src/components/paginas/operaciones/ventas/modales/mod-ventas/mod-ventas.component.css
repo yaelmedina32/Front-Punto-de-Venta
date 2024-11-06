@@ -1,0 +1,17 @@
+h3{
+    color: aliceblue;
+    text-align: center;
+}
+
+h6{
+    color: aliceblue;
+}
+
+section{
+    padding: 20px;
+}
+
+mat-table{
+    max-height: 40vh;
+    overflow-y: auto;
+}

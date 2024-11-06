@@ -1,0 +1,115 @@
+section{
+    width: 80vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.menuI, .menuD{
+    display: flex;
+    margin-bottom: 30px;
+}
+
+#ulitmoElemento{
+    margin-bottom: 0;
+}
+
+.menuI{
+    justify-content: start;
+    margin-left: 7%;
+    margin-right: 10%;
+}
+
+.menuD{
+    justify-content: end;
+    margin-right: 13%;
+}
+
+.contentC:hover, .contentV:hover, .contentCF:hover{
+    box-shadow: 10px 10px 10px black;
+}
+
+span{
+    color: aliceblue;
+}
+
+a:hover, .cliente:hover{
+    background-color: beige;
+    color: black;
+    box-shadow: 10px 10px 10px black;
+}
+
+.contentC, .contentV, .contentCF{
+    padding-top: 1%;
+    width: 95%;
+    margin-left: 14%;
+    height: 23vh;
+    background-color: rgb(26, 24, 24);
+    transition: 0.5s;
+    border-radius: 20px;
+}
+
+.contentC{
+    background-image: url('/oc.png');
+    background-position: start;
+    background-size: 170px;
+    background-repeat: no-repeat;
+}
+
+.contentV{
+    background-image: url('/ventas.png');
+    background-position: right;
+    background-size: 170px;
+    background-repeat: no-repeat;
+    padding-left: 1%;
+}
+.contentCF{
+    background-image: url('/configuracion.png');
+    background-position: start;
+    background-size: 160px;
+    background-repeat: no-repeat;
+} 
+.tituloContent{
+    display: flex;
+    justify-content: center;
+    align-items:initial;
+}
+
+h4{
+    color: rgb(208, 220, 231);
+}
+
+a, .cliente{
+    text-decoration: none;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: inline-block;
+    padding: 1.5%;
+    background-color: rgba(0, 0, 0, .1);
+    color: aliceblue;
+    border-radius: 10px;
+    transition: 0.5s;
+    border: 0;
+}
+
+.contentMedioD, .contentMedioI{
+    width: 80%;
+    height: 13vh;
+    margin-top: -1%;
+    /* background-color: orange; */
+    background: linear-gradient(45deg, orange, rgb(238, 111, 26), rgb(243, 55, 55));
+    box-shadow: 10px 10px 10px black;
+    max-width: 650px;
+    border-radius: 10px;
+    transition: 0.5s;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.contentMedioI{
+    margin-left: 16%;
+}
+
+.contentMedioD{
+    margin-right: 16%;
+}

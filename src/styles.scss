@@ -1,0 +1,28 @@
+@use '../srcm3-theme.scss';
+
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$my-theme: mat.define-theme((
+ color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+  ),
+));
+
+html {
+  // Emit theme-dependent styles for common features used across multiple components.
+  @include mat.core-theme(srcm3-theme.$light-theme);
+
+  // Emit styles for MatButton based on `$my-theme`. Because the configuration
+  // passed to `define-theme` omits typography, `button-theme` will not
+  // emit any typography styles.
+  @include mat.button-theme(srcm3-theme.$light-theme);
+  
+  @include mat.card-theme(srcm3-theme.$light-theme);
+
+  @include mat.slide-toggle-theme(srcm3-theme.$dark-theme);
+
+  // Include the theme mixins for other components you use here.
+}

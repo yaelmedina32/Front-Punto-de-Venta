@@ -1,0 +1,9 @@
+section{
+    text-align: center;
+    color: aliceblue;
+    padding: 30px;
+}
+
+mat-form-field{
+    width: 70%;
+}

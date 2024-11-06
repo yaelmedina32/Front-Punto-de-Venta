@@ -1,0 +1,31 @@
+h2{
+    font-size: 2vw;
+    text-align: center;
+}
+
+.columna{
+    display: flex;
+}
+
+@media (max-width: 750px) {
+    .columna{
+        display: none;
+    }   
+
+    mat-cell{
+        font-size: 2vw;
+    }
+    
+    mat-table{
+        width: 100vw;
+    }
+    .botones{
+        overflow-x: scroll;
+    }
+}
+
+
+mat-card-content{
+    width: 80vw;
+    overflow-x: auto;
+}

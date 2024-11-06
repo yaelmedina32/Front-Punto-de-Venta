@@ -1,0 +1,17 @@
+section{
+    width: 80vw;
+}
+.campo{
+    width: 100%;
+}
+#contenedor{
+    gap: 10px;
+}
+
+mat-hint{
+    color: orange;
+}
+
+mat-card-title{
+    color: aliceblue;
+}

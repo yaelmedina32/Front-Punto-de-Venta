@@ -1,0 +1,97 @@
+<section>
+    <br>
+    <h3 style = "text-align: center;">Ventas</h3>
+    <mat-card>
+        <mat-card-content>
+            <div class = "d-flex justify-content-center">
+                <div class = "contenedor">
+                    <mat-card-title style = "color: aliceblue;"> Selección de Llantas </mat-card-title>
+                </div>
+            </div>
+            <br>
+            <mat-table #table [dataSource]="dataSource" class = "tabla">
+                <ng-container matColumnDef="seleccionar">
+                    <mat-header-cell *matHeaderCellDef sticky> Selec </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox (change)="$any($event.checked) ? element.seleccionado = true : element.seleccionado = false; agregarProducto()"> </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+
+                <ng-container matColumnDef="nombre">
+                    <mat-header-cell *matHeaderCellDef sticky> 
+                        <mat-form-field appearance="outline">
+                            <mat-label>Producto</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'nombrefiltro')">
+                        </mat-form-field>    
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.nombreproducto}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="marca">
+                    <mat-header-cell *matHeaderCellDef sticky> 
+                        <mat-form-field appearance="outline">
+                            <mat-label>Marca</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'marca')">
+                        </mat-form-field>        
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.marca}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="modelo">
+                    <mat-header-cell *matHeaderCellDef sticky> 
+                        <mat-form-field appearance="outline">
+                            <mat-label>Modelo</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'modelo')">
+                        </mat-form-field>        
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.modelo}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="dot">
+                    <mat-header-cell *matHeaderCellDef sticky> 
+                        <mat-form-field appearance="outline">
+                            <mat-label>DOT</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'dot')">
+                        </mat-form-field>        
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.dot}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precioventa">
+                    <mat-header-cell *matHeaderCellDef sticky> P/U </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.precioventa | currency: 'USD'}}
+                    </mat-cell>
+                </ng-container>
+            <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+            </mat-table>
+            <br>
+            <span> <strong>Total: </strong> {{totalVenta | currency: 'USD'}}</span>
+            <br>
+            <div class = "d-flex justify-content-end">
+                <button class = "btn btn-warning" (click) = "consultarVentas()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                    </svg> Consultar Ventas
+                </button> &nbsp;&nbsp;
+
+                <button class = "btn btn-success" (click)="realizarVenta()" [disabled] = "dataSource.data.length == 0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                    </svg> Vender
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</section>

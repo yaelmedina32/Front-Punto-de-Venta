@@ -1,0 +1,63 @@
+.titulosOC{
+    height: 5vh; 
+    background-color: gray;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contenidoOC{
+    border: 2px solid black; 
+    height: 8.7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+mat-card-title{
+    color: white;
+    text-align: center;
+}
+
+span, mat-label{
+    font-size: 1vw;
+    min-width: 30px;
+    color: aliceblue;
+}
+
+@media (max-width: 700px){
+    span{
+        font-size: 10px;
+    }
+    mat-card{
+        display: none;
+        height: 10vh;
+    }
+    button{
+        display: none;
+    }
+}
+
+@media (max-height: 800px){
+    mat-card{
+        height: 20vh;
+    }
+}
+
+td, th{
+    border: 2px solid black;
+    text-align: center;
+}
+th{
+    background-color: rgb(167, 166, 166);
+}
+#contenido{
+    width: 80vw;
+}
+
+mat-table{
+    max-height: 30vh;
+    overflow-y: auto;
+}

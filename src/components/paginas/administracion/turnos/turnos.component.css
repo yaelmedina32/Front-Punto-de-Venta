@@ -1,0 +1,12 @@
+section{
+    width: 80vw;
+}
+
+h3{
+    text-align: center;
+}
+
+mat-table{
+    max-height: 60vh;
+    overflow-y: auto;
+}

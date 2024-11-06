@@ -1,0 +1,171 @@
+<section>
+    <br>
+    <h3 style = "text-align: center;">Administración de Compras</h3>
+    <mat-card style = "width: 80vw; margin-top: 1%;">
+        <mat-card-content style = "width: 100%;" class = "generaOC">
+            <mat-card-title style = "color: aliceblue;">Generar Orden de Compra</mat-card-title>
+            <br>
+            <mat-card-subtitle style = "color: aliceblue;"> Datos complementarios </mat-card-subtitle>
+            <div class = "d-flex gap-3">
+                <mat-form-field style = "width: 100%;">
+                    <mat-label>Solicitante</mat-label>
+                    <input type="text" matInput [formControl] = "solicitante" (ngModelChange)="activarInput($event, 'proveedor')">
+                </mat-form-field>
+    
+                <mat-form-field style = "width: 100%;">
+                    <mat-label>Nombre del Proveedor</mat-label>
+                    <input matInput [formControl] = "proveedor" [matAutocomplete]="auto2" (ngModelChange)="activarInput($event, 'producto')">
+                    <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption="">
+                        <mat-option *ngFor = "let actual of proveedoresFiltrados | async" [value] = "actual.nombre"> 
+                            {{actual.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+            <mat-form-field style = "width: 100%;">
+                <mat-label>Descripción del OC</mat-label>
+                <input type="textarea" matInput [formControl] = "descripcionOC">
+            </mat-form-field>
+            <div class = "d-flex gap-5">
+                <mat-card-subtitle style = "color: aliceblue;"> Datos del producto </mat-card-subtitle>
+                    <mat-slide-toggle [(ngModel)] = "sinInventario"> Inventario Posterior </mat-slide-toggle>
+            </div>
+    
+            <div class = "d-flex gap-3" class = "datosOC" *ngIf = "!sinInventario">
+                <mat-table [dataSource]="dataSourceOC">
+                    <ng-container matColumnDef="inventario">
+                        <mat-header-cell *matHeaderCellDef> Aplica para Inventario </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <mat-checkbox [(ngModel)]="element.inventario"></mat-checkbox>
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="producto">
+                        <mat-header-cell *matHeaderCellDef> Producto </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;">
+                            <mat-form-field style = "width: 100%;">
+                                <mat-label>Producto</mat-label>
+                                <input matInput [matAutocomplete]="auto" [(ngModel)] = "element.producto" [formControl]="producto">
+                                <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarProducto(i, element.producto)">
+                                    <mat-option *ngFor = "let item of productosFiltrados | async" [value] = "item.nombre" id = "opcionesProducto"> 
+                                        {{item.nombre}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="cantidad">
+                        <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;">
+                            <div class = "d-flex  align-items-center" style = "height: 10vh;">
+                                <mat-form-field>
+                                    <mat-label>Cantidad</mat-label>
+                                    <input type="number" matInput [(ngModel)] = "element.cantidad" (ngModelChange)="calcularImporte(i)">
+                                </mat-form-field>
+                            </div>
+                        </mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="unidad">
+                        <mat-header-cell *matHeaderCellDef> Unidad </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <mat-form-field>
+                                <mat-select [(value)] = "element.unidadid">
+                                    @for(unidad of unidades; track unidad;){
+                                        <mat-option [value] = "unidad.unidadid">
+                                            {{unidad.descripcion}}
+                                        </mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="precio">
+                        <mat-header-cell *matHeaderCellDef> Precio Unitario </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;">
+                            <mat-form-field>
+                                <mat-label>Precio</mat-label>
+                                <input type="number" matInput [(ngModel)] = "element.precio" (ngModelChange)="calcularImporte(i)">
+                            </mat-form-field>
+                        </mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="cantidadinventario">
+                        <mat-header-cell *matHeaderCellDef> Cantidad en Inventario </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;">
+                            {{element.cantidadinventario}}
+                        </mat-cell>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="importe">
+                        <mat-header-cell *matHeaderCellDef> Importe </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.importe | currency: '$'}}
+                        </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                        <mat-cell *matCellDef="let element; let i = index;">    
+                            <button class = "btn btn-danger" (click) = "eliminarProducto(i)"> 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                </svg>  
+                            </button>&nbsp;
+                        </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="columnasDesplegadasOC"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: columnasDesplegadasOC;"></mat-row>
+                </mat-table>
+            </div>
+            <div class = "d-flex justify-content-center">
+                <div *ngIf = "sinInventario" class = "sinInventario">
+                    <mat-table [dataSource]="dataSourceInventarios">
+    
+                        <ng-container matColumnDef="cantidad">
+                            <mat-header-cell *matHeaderCellDef> Cantidad Llantas </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index;">    
+                                <mat-form-field appearance="outline">
+                                    <input type="number" matInput [formControl] = "cantidadSI">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+    
+                        <ng-container matColumnDef="costo">
+                            <mat-header-cell *matHeaderCellDef> Costo Total </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index;">    
+                                <mat-form-field appearance="outline">
+                                    <input type="number" matInput [formControl] = "costoSI">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+    
+                        <mat-header-row *matHeaderRowDef="columnasDesplegadasInventario"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: columnasDesplegadasInventario;"></mat-row>
+                    </mat-table>
+                </div>
+            </div>
+    
+        </mat-card-content>
+        <div class = "d-flex justify-content-end" style = "padding: 1vw;">
+            <button class = "btn btn-info" (click) = "abrirConsulta()" id = "consultaOC"  #mostrarAlta>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                </svg> Ordenes Compra
+            </button> &nbsp;&nbsp;
+            <button class = "btn btn-primary" (click) = "agregarProducto()" id = "agregarProducto"  #mostrarAlta *ngIf = "!sinInventario">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg> Producto
+            </button> &nbsp;&nbsp;
+            <button class = "btn btn-success" (click) = "guardarOC()" id = "guardarOC"  #mostrarAlta>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                    <path d="M11 2H9v3h2z"/>
+                    <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                </svg> Guardar OC
+            </button>
+        </div>
+    </mat-card>
+</section>

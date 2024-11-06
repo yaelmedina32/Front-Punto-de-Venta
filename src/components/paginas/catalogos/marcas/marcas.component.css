@@ -1,0 +1,21 @@
+section{
+    width: 80vw;
+}
+mat-card-title{
+    color: aliceblue;
+}
+
+mat-card{
+    width: 50%;
+}
+
+.contenedor{
+    display: flex;
+    justify-content: center;
+}
+
+mat-table{
+    height: 500px;
+    overflow-y: scroll;
+    
+}

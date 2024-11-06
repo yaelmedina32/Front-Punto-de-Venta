@@ -1,0 +1,32 @@
+mat-card-content{
+    width: 100%;
+    max-height: 80vh;
+    overflow-x: auto;
+}
+mat-card{
+    width: 80vw;
+}
+
+mat-header-row{
+    position: sticky;
+}
+
+mat-table{
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+@media (max-width: 750px) {
+    mat-table{
+        width: 100vw;
+    }
+    mat-cell{
+        font-size: 2vw;
+    }
+    .botones{
+        overflow-x: scroll;
+    }
+    mat-cell button, mat-cell button svg{
+        text-align: center;
+    }
+}

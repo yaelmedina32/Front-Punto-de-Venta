@@ -1,0 +1,121 @@
+<section>
+    <h3> Consulta de Ventas </h3>
+    <div class = "d-flex justify-content-around">
+        <mat-slide-toggle (change)="filtrarCXP($any($event.checked))" [(ngModel)] = "filtrarRegistrados"> Filtrar Cuentas por Pagar </mat-slide-toggle>
+        <h6>Total Ventas: <strong>{{totalVentas}}</strong> </h6>
+    </div>
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="folioventa">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Folio de Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'folioventa')">
+                </mat-form-field>    
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.folioventa}}
+            </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="montoventa">
+            <mat-header-cell *matHeaderCellDef> 
+            <mat-form-field appearance="outline">
+                <mat-label> Monto de Venta </mat-label>
+                <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'montoventa')">
+            </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.montoventa | currency: 'USD'}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaventa">
+            <mat-header-cell *matHeaderCellDef> 
+            <mat-form-field appearance="outline">
+                <mat-label> Fecha de la Venta </mat-label>
+                <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'fechaventa')">
+            </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.fechaventa}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cliente">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Cliente </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'cliente')">
+                </mat-form-field>            
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.cliente}}
+            </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="tipopago">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Tipo de Pago </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'tipopago')">
+                </mat-form-field>            
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.tipopago}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoventa">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Tipo de Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'tipoVenta')">
+                </mat-form-field>            
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.tipoVenta}}
+            </mat-cell>
+        </ng-container>
+                
+    
+        <ng-container matColumnDef="estatus">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Estatus de la Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'estatus')">
+                </mat-form-field>            
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.estatus}}
+            </mat-cell>
+        </ng-container>
+                
+        <ng-container matColumnDef="editar">
+            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                @if(element.cantidadpagos == 0){
+                    <button class = "btn btn-primary" (click)="editarVenta(element.folioventa)" matTooltip="Editar Venta" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                        </svg>
+                    </button> &nbsp;&nbsp;
+                }@else{
+                    <button class = "btn btn-info" (click)="editarVenta(element.folioventa)" matTooltip="Ver Venta" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                        </svg>
+                    </button> &nbsp;&nbsp;
+                }
+                <button class = "btn btn-warning" *ngIf = "element.estatus == 'Registrado'" matTooltip="Abonar a deuda" (click) = "abonarPago(element.folioventa)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                    </svg>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+    </mat-table>
+</section>

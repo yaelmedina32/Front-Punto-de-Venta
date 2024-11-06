@@ -1,0 +1,171 @@
+<section>
+    <br>
+    <h3 style = "text-align: center;"> Configuración de Usuarios </h3>
+    <mat-card>
+        <mat-card-content>
+            <mat-tab-group animationDuration="0ms">
+                <mat-tab label = "Alta/Configuración de Usuarios">
+                    <mat-checkbox [(ngModel)] = "altaUsuario"> {{altaUsuario ? 'Activar Configuración de Usuarios Existentes' : 'Activar Alta de Usuarios'}}  </mat-checkbox>
+                    <div *ngIf = "altaUsuario">
+                        <div class = "contentTab">
+                            <div class = "d-flex gap-5">
+                                <mat-form-field>
+                                    <mat-label> Acceso </mat-label>
+                                    <input type="text" matInput [formControl] = "acceso">
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label> Clave </mat-label>
+                                    <input type="password" matInput [formControl] = "clave">
+                                </mat-form-field>
+                            </div>
+                            <div class = "d-flex gap-5"> 
+                            <mat-form-field>
+                                <mat-label> Nombre del Usuario </mat-label>
+                                <input type="text" matInput [formControl] = "nombreUsuario">
+                            </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label> Correo del Usuario </mat-label>
+                                    <input type="text" matInput [formControl] = "email">
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label> Dirección </mat-label>
+                                    <input type="text" matInput [formControl] = "direccion">
+                                </mat-form-field>
+                            </div>
+                            <div class = "d-flex justify-content-end">
+                                <button class = "btn btn-success" (click) = "guardarUsuario()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                        <path d="M11 2H9v3h2z"/>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                    </svg> Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf = "!altaUsuario">
+                        <div class = "contentTab">
+                            <div class = "d-flex gap-5">
+                                <mat-form-field>
+                                    <mat-label> Seleccione Usuario </mat-label>
+                                    <input type="text" matInput [matAutocomplete]="auto2" [formControl] = "usuario">
+                                    <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarUsuario()">
+                                        <mat-option *ngFor = "let actual of usuariosFiltrados | async" [value] = "actual.nombre"> 
+                                            {{actual.nombre}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+    
+                                <mat-form-field>
+                                    <mat-label> Estatus del Usuario </mat-label>
+                                    <mat-select [(ngModel)] = "usuarioSeleccionado.estatusid" [disabled]="usuario.value == ''">
+                                        @for(estatus of estatusTabla; track estatus){
+                                            <mat-option [value] = "estatus.estatusid">
+                                                {{estatus.descripcion}}
+                                            </mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class = "d-flex gap-3">
+
+                                <mat-form-field>
+                                    <mat-label> eMail </mat-label>
+                                    <input type="text" matInput [formControl] = "email" >
+                                </mat-form-field>
+    
+                                <mat-form-field>
+                                    <mat-label> Dirección </mat-label>
+                                    <input type="text" matInput [formControl] = "direccion" >
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label> Acceso </mat-label>
+                                    <input type="text" matInput [formControl] = "acceso" >
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class = "d-flex justify-content-end gap-2">
+                            <button class="btn btn-warning" [disabled] = "usuario.value == ''"> 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                </svg> Contraseña 
+                            </button>
+                            <button class = "btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                    <path d="M11 2H9v3h2z"/>
+                                    <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                  </svg> Guardar
+                            </button>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label = "Permisos">
+                    <div class = "contentTab">
+                        
+                        <mat-form-field>
+                            <mat-label> Seleccione Usuario </mat-label>
+                            <input type="text" matInput [matAutocomplete]="auto2" [formControl] = "usuario">
+                            <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarUsuario()">
+                                <mat-option *ngFor = "let actual of usuariosFiltrados | async" [value] = "actual.nombre"> 
+                                    {{actual.nombre}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-tab-group>
+                            <mat-tab label = "Menú">
+                                <mat-table [dataSource]="dataSource">
+                                    <ng-container matColumnDef="nombre">
+                                        <mat-header-row *matHeaderCellDef> Nombre del Menú </mat-header-row>
+                                        <mat-cell *matCellDef="let element">
+                                            {{element.nombre}}
+                                        </mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef="asignado">
+                                        <mat-header-row *matHeaderCellDef> Asignado </mat-header-row>
+                                        <mat-cell *matCellDef="let element">
+                                            <mat-checkbox [checked]="element.asignado == 1" (change) = "element.asignado = $any($event.checked) ? 1 : 0"></mat-checkbox>
+                                        </mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef="columnasDesplegadas"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+                                </mat-table>
+                                <button class = "btn btn-success" (click) = "guardarPermisos()"> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                        <path d="M11 2H9v3h2z"/>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                    </svg> Guardar</button>
+                            </mat-tab>
+                            <mat-tab label="Botones">
+                                <mat-accordion>
+                                  <mat-expansion-panel *ngFor="let panel of botones" [disabled]="panel.asignado == 0">
+                                    <mat-expansion-panel-header>
+                                      <mat-panel-title>{{ panel.nombreMenu }}</mat-panel-title>
+                                      <mat-panel-description *ngIf="panel.asignado === 0">No puede acceder a este apartado</mat-panel-description>
+                                    </mat-expansion-panel-header>
+                                    
+                                    <!-- Recorre los botones dentro del panel actual -->
+                                    <div class="d-flex flex-wrap justify-content-around gap-5" >
+                                        <ng-container *ngFor="let boton of panel.botones">
+                                            <p>{{ boton.nombreBoton }} </p>
+                                                <mat-checkbox [checked]="boton.seleccionado" (change)="boton.seleccionado = $any($event.checked)" ></mat-checkbox>
+                                        </ng-container>
+                                    </div>
+                                    
+                                  </mat-expansion-panel>
+                                </mat-accordion>
+                                &nbsp;&nbsp;
+                                <button class = "btn btn-success" (click)="guardarCambiosbtn()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                        <path d="M11 2H9v3h2z"/>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                      </svg> Guardar
+                                </button>
+                              </mat-tab>
+                              
+                            <mat-tab label = "Sucursales"> </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+</section>

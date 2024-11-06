@@ -1,0 +1,14 @@
+
+section{
+    padding: 30px;
+}
+
+h3{
+    color: aliceblue;
+    text-align: center;
+}
+
+mat-table{
+    max-height: 50vh;
+    overflow-y: auto;
+}

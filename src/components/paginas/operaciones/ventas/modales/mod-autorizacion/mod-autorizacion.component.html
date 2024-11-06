@@ -1,0 +1,10 @@
+<section>
+    <h5> Autorización de Descuentos </h5>
+    <mat-form-field>
+        <mat-label> Clave de Personal Autorizado </mat-label>
+        <input type="password" matInput [formControl] = "clave">
+    </mat-form-field>
+    <div class = "d-flex justify-content-end">
+        <button class = "btn btn-success" (click) = "comprobarAutorizacion()"> Autorizar </button>
+    </div>
+</section>

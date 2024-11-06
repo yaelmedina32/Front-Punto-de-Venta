@@ -1,0 +1,10 @@
+mat-card-content{
+    width: 80vw;
+    overflow-x: auto;
+}
+
+@media (max-width: 750px) {
+    mat-table{
+        width: 100vw;
+    }
+}

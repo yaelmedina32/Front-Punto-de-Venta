@@ -1,0 +1,200 @@
+<br>
+<section>
+    <h3 style = "text-align: center;"> Alta de Inventario </h3>
+    <mat-card style = "width: 100%;" >
+        <div class = "d-flex">
+            <div style = "width: 40%">
+                <mat-card-content>
+                    <div class = "d-flex justify-content-around align-items-center">
+                        <mat-card-title style = "color:aliceblue;">Seleccione OC:</mat-card-title> &nbsp;
+                        <mat-form-field>
+                            <mat-label> Folio OC. </mat-label>
+                            <input type="text" matInput [formControl] = "ocCapturada" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption>
+                                @for(actual of ordenesCompraFiltered | async; track actual;){
+                                    <mat-option [value] = "actual.ordencompraid"> 
+                                        {{actual.ordencompraid}}
+                                    </mat-option>
+                                }
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <button class = "btn btn-light" (click)="buscarOC()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                            Buscar OC
+                        </button>
+                    </div>
+                </mat-card-content>
+            </div>
+            @if(ocSeleccionada.length > 0){
+                <div class = "d-flex justify-content-around align-items-center" style = "width: 50%;" >
+                    <button class = "btn btn-warning" (click)="inventarearTodo()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                        </svg> Inventarear Todo
+                    </button>
+                    <button class = "btn btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                        </svg> Guardar Inventario sin OC
+                    </button>
+                </div>
+            }
+        </div>
+    </mat-card>
+    <br>
+    <mat-accordion class = "w-100" *ngIf = "ocSeleccionada.length > 0">
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title> Resúmen de la OC </mat-panel-title>
+                <mat-panel-description>
+                    Descripción de los producto faltantes para inventario.
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                @for (item of ocSeleccionada; track $index) {
+                    <div class = "d-flex">
+                        <div class = "d-flex w-25">
+                            <span> Producto:  </span> &nbsp;
+                            <span>  "{{item.nombreproducto}}" </span>
+                        </div> &nbsp;&nbsp;
+                        <div class = "d-flex w-25">
+                            <span> Modelo:  </span> &nbsp;
+                            <span>  "{{item.modelo}}" </span>
+                        </div> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class = "d-flex w-25">
+                            <span> Cantidad:  </span> &nbsp;
+                            <span>  {{item.cantidad}} </span>
+                        </div>
+                        <div class = "d-flex w-25">
+                            <span> Unidad:  </span> &nbsp;
+                            <span>  {{item.unidad}} </span>
+                        </div> &nbsp;&nbsp;
+                        <div class = "d-flex w-25">
+                            <span> Precio Unitario:  </span> &nbsp;
+                            <span>  {{item.preciounitario | currency: 'USD'}} </span>
+                        </div> &nbsp;&nbsp;
+                        
+                        <div class = "d-flex w-25">
+                            <span> Cantidad en Inventario:  </span> &nbsp;
+                            <span>  {{item.cantidadinventario}} </span>
+                        </div> &nbsp;&nbsp;
+                    </div>
+                    <br>
+                }
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <br>
+    <mat-card *ngIf = "ocSeleccionada.length > 0">
+        <mat-card-content style = "padding-top: 1%;">
+            <mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="producto">
+                    <mat-header-cell *matHeaderCellDef> 
+                        <mat-form-field>
+                            <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'nombreproducto')" placeholder="Filtrar producto">
+                        </mat-form-field>    
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;">
+                        <mat-form-field>
+                            <mat-select [(value)] = "element.nombreproducto" (selectionChange)="calcularRestantes(i, 0)">
+                                @for(item of ocSeleccionada; track item){
+                                    <mat-option [value] = "item.nombreproducto">
+                                        {{item.nombreproducto}}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+                <!--UBICACION-->
+                <ng-container matColumnDef="ubiacion">
+                    <mat-header-cell *matHeaderCellDef> Ubicación </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;">
+                        <mat-form-field>
+                            <mat-select>
+                                @for(ubicacion of ubicaciones; track ubicacion){
+                                    <mat-option>
+                                        {{ubicacion.ubicacion}}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="dot">
+                    <mat-header-cell *matHeaderCellDef> 
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Filtrar DOT" (keyup)="filtrarDatos($any($event.target).value, 'dot')">
+                        </mat-form-field>       
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="DOT" [(ngModel)] = "element.dot">
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+                
+                <ng-container matColumnDef="ubicacion">
+                    <mat-header-cell *matHeaderCellDef> Ubicación </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;">
+                        <mat-form-field>
+                            <mat-select [(value)] = "element.ubicacionid">
+                                @for(ubicacion of element.ubicaciones; track ubicacion;){
+                                    <mat-option [value] = "ubicacion.ubicacionid">
+                                        {{ubicacion.ubicacion}}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cantidad">
+                    <mat-header-cell *matHeaderCellDef> Cantidad a Inventario </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;">
+                        <mat-form-field>
+                            <input type="number" [min]="0" matInput [(ngModel)] = "element.cantidad" placeholder="Cantidad" (change)="calcularRestantes(i, 0)">
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precioventa">
+                    <mat-header-cell *matHeaderCellDef> Precio de Venta </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index;">
+                        <mat-form-field appearance="outline">
+                            <input type="number" matInput placeholder = "Precio de Venta." [(ngModel)] = "element.precioventa" (change) = "validarPrecio(i, $any($event.target).value)">
+                        </mat-form-field>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="restante">
+                    <mat-header-cell *matHeaderCellDef> Cantidad Restante </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.cantidadrestante}}
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="columnasDesplegadas"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnasDesplegadas"> </mat-row>
+            </mat-table>
+        </mat-card-content>
+        <div class = "d-flex justify-content-end" style = "padding: 13px;">
+            <!--AGREGAR-->
+            <button class = "btn btn-info" (click) = "agregarProducto()"> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg> Producto
+            </button> &nbsp;&nbsp;
+            <!--GUARDAR-->
+            <button class = "btn btn-success" (click) = "guardarInventario()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                    <path d="M11 2H9v3h2z"/>
+                    <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                </svg> Producto
+            </button>
+        </div>
+    </mat-card>
+</section>

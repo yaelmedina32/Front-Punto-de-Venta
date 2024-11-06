@@ -1,0 +1,16 @@
+mat-card-content{
+    max-height: 90vh;
+}
+
+mat-table{
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+mat-card{
+    width: 80vw;
+}
+
+#subirExcel{
+    color: aliceblue;
+}

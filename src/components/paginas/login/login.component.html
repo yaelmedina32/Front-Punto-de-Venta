@@ -1,0 +1,28 @@
+<div id = "body">
+    <div class="login">
+        <div class="login-screen">
+            <br>
+            <div class="app-title">
+                <h3 style = "color: #252729;">Acceso</h3>
+            </div>
+
+            <div class="login-form">
+                <div class="control-group">
+                <input type="text" class="login-field" value="" placeholder="Usuario" id="login-name" [formControl] = "usuario" matInput (keydown.enter)="login()">
+                <label class="login-field-icon fui-user" for="login-name"></label>
+                </div>
+
+                <div class="control-group">
+                <input type="password" class="login-field" value="" placeholder="Contraseña" id="login-pass" [formControl] = "clave" matInput (keydown.enter)="login()">
+                <label class="login-field-icon fui-lock" for="login-pass"></label>
+                </div>
+
+                <!-- <a class="btn btn-primary btn-large btn-block" href="#" (click)="login()">Login</a> -->
+                <button class = "btn btn-danger btn-large btn-block" (click)="login()">Login</button>
+                <a class="login-link" href="#"></a>
+            </div>
+        </div>
+        <!-- <img src="/distribuible_dctires/logo.jpg" alt="" style = "width: 40%;"> -->
+        <img src="/logo.jpg" alt="" style = "width: 40%;">
+    </div>
+</div>

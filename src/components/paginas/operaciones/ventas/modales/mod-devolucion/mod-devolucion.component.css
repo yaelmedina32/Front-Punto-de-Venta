@@ -1,0 +1,12 @@
+section{
+    padding: 30px;
+    color: aliceblue;
+}
+
+h3{
+    text-align: center;
+}
+
+mat-form-field{
+    width: 100%;
+}

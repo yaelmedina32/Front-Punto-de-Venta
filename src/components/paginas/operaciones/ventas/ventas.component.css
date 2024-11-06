@@ -1,0 +1,43 @@
+section{
+    width: 80vw;
+}
+
+.contenedor{
+    width: 75%;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+span{
+    color: aliceblue;
+}
+
+mat-form-field{
+    max-height: 70px;
+}
+
+mat-card{
+    height: 70vh;
+}
+
+button{
+    max-height: 50px;
+}
+
+.divMixtos{
+    width: 75%;
+    padding: 5px;
+}
+
+mat-table{
+    max-height: 50vh;
+    width: 100%;
+    overflow-y: auto;
+}
+
+mat-header-cell{
+    position: sticky !important;
+    top: 0;
+    z-index: 2;
+}

@@ -1,0 +1,46 @@
+section{
+    width: 80vw;
+}
+
+#contenedorCompras{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#opcionesProducto{
+    width: 140%;
+}
+
+.sinInventario{
+    width: 60%;
+}
+
+mat-card-content{
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+@media (max-width: 750px) {
+    mat-cell, mat-label{
+        font-size: 2vw;
+    }
+    
+    mat-table{
+        width: 100vw;
+    }
+    .datosOC{
+        width: 80vw;
+    }
+    .botones{
+        overflow-x: scroll;
+    }
+}
+
+.generaOC{
+    max-height: 60vh;
+}
+
+span{
+    color: aliceblue;
+}

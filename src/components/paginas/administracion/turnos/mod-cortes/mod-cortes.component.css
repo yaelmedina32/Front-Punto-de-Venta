@@ -1,0 +1,12 @@
+h3, mat-hint{
+    text-align: center;
+    color: aliceblue;
+}
+
+section{
+    padding: 30px;
+}
+
+mat-form-field{
+    width: 100%;
+}

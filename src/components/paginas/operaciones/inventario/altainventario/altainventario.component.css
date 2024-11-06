@@ -1,0 +1,14 @@
+section{
+    width: 80vw;
+}
+
+mat-table{
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* input{
+    border: 1px solid white;
+    background-color: var(--mdc-elevated-card-container-color);
+    color: white;
+} */

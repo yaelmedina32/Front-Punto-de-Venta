@@ -1,0 +1,142 @@
+<section>
+    <h3> {{data[0].lectura ? 'Detalles Venta' : 'Confirmación Venta'}} </h3>
+    <div class = "d-flex justify-content-around" id = "footer">
+        <h6> Total: {{totalVenta | currency: 'USD'}} </h6>
+        <h6 *ngIf = "data[0].folioventa"> Folio Venta: {{data[0].folioventa}} </h6>
+        <mat-form-field>
+            <mat-label> Nombre del Cliente </mat-label>
+            <input matInput [matAutocomplete]="auto" [formControl] = "cliente">
+            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarCliente()">
+                <mat-option *ngFor = "let item of clientesFiltrados | async" [value] = "item.nombre" id = "opcionesProducto"> 
+                    {{item.nombre}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+    <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef sticky> 
+                <mat-form-field appearance="outline">
+                    <mat-label>Producto</mat-label> 
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'nombrefiltro')">
+                </mat-form-field>    
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element; let i = index;">
+                @if(element.nombreproducto != ''){
+                    {{element.nombreproducto}}
+                }@else {
+                    <mat-form-field>
+                        <mat-select [(value)]="element.nombreproducto" (selectionChange)="seleccionarServicio(i)">
+                            @for(item of servicios; track item){
+                                <mat-option [value] = "item.nombre">
+                                    {{item.nombre}}
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="marca">
+            <mat-header-cell *matHeaderCellDef sticky> 
+                <mat-form-field appearance="outline">
+                    <mat-label>Marca</mat-label> 
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'marca')">
+                </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.marca}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad">
+            <mat-header-cell *matHeaderCellDef sticky> Cantidad </mat-header-cell>
+            <mat-cell *matCellDef="let element; let i = index">
+                @if(element.productoid != 0){
+                    <mat-form-field>
+                        <input type="number" matInput [(ngModel)] = "element.cantidad" (keyup)="validarInput(i, $any($event.target).value)">
+                    </mat-form-field>
+                }@else {
+                    {{element.cantidad}}
+                }
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="modelo">
+            <mat-header-cell *matHeaderCellDef sticky> 
+                <mat-form-field appearance="outline">
+                    <mat-label>Modelo</mat-label> 
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'modelo')">
+                </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.modelo}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="dot">
+            <mat-header-cell *matHeaderCellDef sticky> 
+                <mat-form-field appearance="outline">
+                    <mat-label>DOT</mat-label> 
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'dot')">
+                </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.dot}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="precioventa">
+            <mat-header-cell *matHeaderCellDef sticky> P/U </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.precioventa | currency: 'USD'}}
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="descuento">
+            <mat-header-cell *matHeaderCellDef sticky> Desc </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                @if(!element.autorizadoDescuento){
+                    {{element.descuento}}
+                }@else {
+                    <mat-form-field>
+                        <input type="number" matInput [(ngModel)] = "element.descuento">
+                    </mat-form-field>
+                }
+            </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+            <mat-header-cell *matHeaderCellDef sticky> Acciones </mat-header-cell>
+            <mat-cell *matCellDef="let element; let i = index;">
+                <button class = "btn btn-primary"  [disabled]="element.productoid == 0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                    </svg>
+                </button>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+    </mat-table>
+    <br>
+  
+    <div *ngIf="!data[0].lectura" class = "d-flex justify-content-end" >
+        <button class = "btn btn-warning" (click)="agregarCliente()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg> Cliente
+        </button> &nbsp;&nbsp;
+        <button class = "btn btn-warning" (click)="agregarServicio()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg> Servicio
+        </button> &nbsp;&nbsp;
+        <button class = "btn btn-success" (click)="guardarVenta()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                <path d="M11 2H9v3h2z"/>
+                <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+            </svg> Venta
+        </button>
+    </div>
+
+</section>

@@ -1,0 +1,68 @@
+<section>
+    <h3> Historial de Devoluciones </h3>
+    <mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="folioventa">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Folio de Venta </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'ventaid')">
+                </mat-form-field>        
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.ventaid}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Producto </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'nombre')">
+                </mat-form-field>            
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.nombre}}
+            </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="precioventa">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Precio Venta </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'precioventa')">
+                </mat-form-field>         
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.precioventa | currency: 'USD'}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Fecha Devolución </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'fechadevolucion')">
+                </mat-form-field>         
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.fechadevolucion}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="motivo">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Motivo </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'motivo')">
+                </mat-form-field>         
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.motivo}}
+            </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="columnasDesplegadas"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+    </mat-table>
+</section>
