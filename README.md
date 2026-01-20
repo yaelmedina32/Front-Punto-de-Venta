@@ -1,27 +1,43 @@
-# DCTires
+# Frontend Point of Sales – Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.0.
+![Angular](https://img.shields.io/badge/Angular-20-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-blue)
+![Docker](https://img.shields.io/badge/Docker-Enabled-darkblue)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
 
-## Development server
+## 🧠 Project Context
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This project is the **frontend of an enterprise point of sale system**, used
+in conjunction with its backend API (Node.js & Express).  
+It is designed to offer intuitive interfaces for business users,
+including product management, sales, inventory, and user profiles.
 
-## Code scaffolding
+This project is part of a real system used in business environments
+and reflects scalable and maintainable architecture patterns with Angular 20.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 🎯 Objective
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Build a modern SPA with **Angular 20**.
+- Integrate with a REST backend (Point of Sales API).
+- Use **feature-based modular architecture** to facilitate scalability.
+- Prepare for deployment in Docker containers for real environments.
 
-## Running unit tests
+---
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🧰 Tech Stack
 
-## Running end-to-end tests
+- **Angular 20**
+- **TypeScript**
+- **RxJS**
+- **Angular Router**
+- **SCSS / CSS**
+- **Docker (optional for deployment)**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+---
 
-## Further help
+## 🏗 Project Architecture
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project follows modern Angular patterns and good separation of concerns:
+
