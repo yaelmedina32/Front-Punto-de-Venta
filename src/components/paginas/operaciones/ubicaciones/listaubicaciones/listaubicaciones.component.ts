@@ -9,11 +9,10 @@ import { SessionService } from '../../../../services/session.service';
 declare const $: any;
 
 @Component({
-  selector: 'app-listaubicaciones',
-  standalone: true,
-  imports: [CompartidosModule, RouterLink],
-  templateUrl: './listaubicaciones.component.html',
-  styleUrl: './listaubicaciones.component.css'
+    selector: 'app-listaubicaciones',
+    imports: [CompartidosModule],
+    templateUrl: './listaubicaciones.component.html',
+    styleUrl: './listaubicaciones.component.css'
 })
 export class ListaubicacionesComponent implements OnInit{
   menuId=6;

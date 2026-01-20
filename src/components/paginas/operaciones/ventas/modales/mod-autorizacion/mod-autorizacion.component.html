@@ -1,5 +1,5 @@
 <section>
-    <h5> Autorización de Descuentos </h5>
+    <h5> {{data == 'cancelar' ? 'Cancelación de Ventas' : 'Autorización de Descuentos'}} </h5>
     <mat-form-field>
         <mat-label> Clave de Personal Autorizado </mat-label>
         <input type="password" matInput [formControl] = "clave">

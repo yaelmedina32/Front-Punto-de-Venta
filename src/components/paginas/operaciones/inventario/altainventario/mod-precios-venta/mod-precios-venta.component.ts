@@ -11,15 +11,14 @@ export class Ubicaciones{
 }
 
 @Component({
-  selector: 'app-mod-precios-venta',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-precios-venta.component.html',
-  styleUrl: './mod-precios-venta.component.css'
+    selector: 'app-mod-precios-venta',
+    imports: [CompartidosModule],
+    templateUrl: './mod-precios-venta.component.html',
+    styleUrl: './mod-precios-venta.component.css'
 })
 export class ModPreciosVentaComponent implements OnInit{
   dataSource = new MatTableDataSource();
-  columnasDesplegadas = ['nombre', 'modelo', 'precioventa', 'ubicacion'];
+  columnasDesplegadas = ['nombre', 'preciocompra', 'precioventa', 'ubicacion'];
   almacenId = 0;
   ubicaciones: Array<Ubicaciones> = [];
 
@@ -31,7 +30,7 @@ export class ModPreciosVentaComponent implements OnInit{
       this.dataSource.data.push({
         productoid: element.productoid,
         nombre: element.nombreproducto,
-        modelo: element.modelo,
+        preciounitario: element.preciounitario,
         precioventa: 0,
         ubicacionid: 0,
       });
@@ -46,14 +45,10 @@ export class ModPreciosVentaComponent implements OnInit{
   }
 
   guardarPrecios(){
-    swal({
-      title: '¿Seguro que desea guardar los precios de venta?', 
-      text: 'Se van a guardar los precios de venta de los productos a inventarear', 
-      buttons: ['No', 'Si'], 
-      icon: "warning"}).then((response: any) => {
-        if(response){
-          this.dialog.close(this.dataSource.data);
-        }
-      })
+    if(this.dataSource.data.some((element: any) => element.precioventa == 0)){
+      swal("Precio de venta requerido", "Se requiere el precio de venta para poder continuar", "error");
+      return;
+    }
+    this.dialog.close(this.dataSource.data);
   }
 }

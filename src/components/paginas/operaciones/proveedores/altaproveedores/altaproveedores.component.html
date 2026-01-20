@@ -1,12 +1,12 @@
 <section>
     <br>
-    <h3 style = "text-align: center;"> Alta de Proveedores </h3>
+    <h3 style = "text-align: center; color: aliceblue;"> Alta de Proveedores </h3>
     <mat-card>
         <mat-card-content>
             <mat-card-title> Datos de la Empresa </mat-card-title>
             <br>
             <form action="" [formGroup]="formGroup">
-                <div class="d-flex" id="contenedor">
+                <div class="d-flex apliColor" id="contenedor">
                     <mat-form-field class="campo">
                         <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.nombreProveedor.valid">*Campo Requerido</mat-hint>
                         <mat-label>Nombre de la Empresa</mat-label>
@@ -24,9 +24,10 @@
                         <input type="text" matInput formControlName = "email">
                     </mat-form-field>
                 </div>
-                <div class="d-flex" id="contenedor">
+                <div class="d-flex apliColor" id="contenedor">
                     <mat-form-field class="campo">
-                        <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.rfc.valid">*Campo Requerido</mat-hint>
+                        <mat-hint *ngIf = "vista != 'vista' && formGroup.controls.rfc.hasError('required')">*Campo Requerido</mat-hint>
+                        <mat-hint *ngIf = "vista != 'vista' && formGroup.controls.rfc.hasError('rfcInvalido')">*RFC con más de 15 caracteres</mat-hint>
                         <mat-label>RFC</mat-label>
                         <input type="text" matInput formControlName = "rfc">
                     </mat-form-field>
@@ -41,7 +42,7 @@
                         <input type="text" matInput formControlName = "cp">
                     </mat-form-field>
                 </div>
-                <div class="d-flex" id="contenedor">
+                <div class="d-flex apliColor" id="contenedor">
                     <mat-form-field class="campo">
                         <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.numeroexterior.valid">*Campo Requerido</mat-hint>
                         <mat-label>Número exterior</mat-label>
@@ -53,7 +54,7 @@
                         <input type="text" matInput formControlName = "colonia">
                     </mat-form-field>
                 </div>
-                <div class="d-flex" id="contenedor">
+                <div class="d-flex apliColor" id="contenedor">
                     <mat-form-field class="campo">
                         <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.ciudad.valid">*Campo Requerido</mat-hint>
                         <mat-label>Ciudad</mat-label>
@@ -65,7 +66,7 @@
                         <input type="text" matInput formControlName = "municipio">
                     </mat-form-field>
                 </div>
-                <div class="d-flex" id="contenedor">
+                <div class="d-flex apliColor" id="contenedor">
                     <mat-form-field class="campo">
                         <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.estado.valid">*Campo Requerido</mat-hint>
                         <mat-label>Estado</mat-label>
@@ -76,14 +77,19 @@
                         <mat-label>País</mat-label>
                         <input type="text" matInput formControlName = "pais">
                     </mat-form-field>
+                    <mat-form-field class="campo">
+                        <mat-hint *ngIf = "vista != 'vista' && !formGroup.controls.alias.valid">*Campo Requerido</mat-hint>
+                        <mat-label>Alias</mat-label>
+                        <input type="text" matInput formControlName = "alias">
+                    </mat-form-field>
                 </div>
             </form>
             <div class = "d-flex justify-content-end">
-                <button class = "btn btn-success" (click) = "guardarProveedor()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                <button class = "Grbtn" (click) = "guardarProveedor()">
+                    <svg style="color: #82f06cd6;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                         <path d="M11 2H9v3h2z"/>
                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                    </svg> Guardar
+                    </svg><span class="colorGreen">&nbsp;Guardar</span> 
                 </button>
             </div>
         </mat-card-content>

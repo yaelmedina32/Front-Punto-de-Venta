@@ -2,7 +2,8 @@
 
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $my-theme: mat.define-theme((
  color: (
@@ -13,7 +14,8 @@ $my-theme: mat.define-theme((
 
 html {
   // Emit theme-dependent styles for common features used across multiple components.
-  @include mat.core-theme(srcm3-theme.$light-theme);
+  @include mat.elevation-classes();
+  @include mat.app-background();
 
   // Emit styles for MatButton based on `$my-theme`. Because the configuration
   // passed to `define-theme` omits typography, `button-theme` will not

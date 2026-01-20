@@ -6,11 +6,10 @@ import { ApiService } from '../../../services/api.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-mod-turno',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-turno.component.html',
-  styleUrl: './mod-turno.component.css'
+    selector: 'app-mod-turno',
+    imports: [CompartidosModule],
+    templateUrl: './mod-turno.component.html',
+    styleUrl: './mod-turno.component.css'
 })
 export class ModTurnoComponent implements OnInit{
   monto = new FormControl();
@@ -43,7 +42,6 @@ export class ModTurnoComponent implements OnInit{
             sucursalid: this.data.sucursalid,
           }
           this.api.insertarDatos('administracion/turno', datos).subscribe((response: any) => {
-            swal("Turno inicializado", "Se inició el turno correctamente\n Para Iniciar un nuevo turno deberá finalizar el actual", "success");
             this.dialog.close();
           })
         }

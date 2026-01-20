@@ -16,15 +16,15 @@ export class Cliente{
 }
 
 @Component({
-  selector: 'app-mod-listado',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-listado.component.html',
-  styleUrl: './mod-listado.component.css'
+    selector: 'app-mod-listado',
+    imports: [CompartidosModule],
+    templateUrl: './mod-listado.component.html',
+    styleUrl: './mod-listado.component.css'
 })
 export class ModListadoComponent implements OnInit{
   menuId = 10;
-  dataSource = new MatTableDataSource<Cliente>();
+  dataSource = new MatTableDataSource<Cliente>(); 
+   dataSourceAuxiliar: Array<Cliente> = [];
   columnasDesplegadas = ['nombre', 'fechaalta', 'correo', 'telefono', 'estatus', 'acciones']
 
   constructor(private api: ApiService, private dialog: MatDialog, private session: SessionService){}
@@ -38,7 +38,6 @@ export class ModListadoComponent implements OnInit{
     swal({text: '¿Seguro que desea guardar cambios en los clientes?', title: 'Guardar Cambios', icon: "warning", buttons: ['No', 'Si']}).then((response) => {
       if(response){
         this.api.modificarDatos('administracion/clientes', this.dataSource.data.filter(ele => ele.estatusId == 9)).subscribe((response) => {
-          swal("Datos modificados correctamente", "Se modificaron los clientes exitosamente", "success");
           this.cargarClientes();
         })
       }
@@ -51,7 +50,6 @@ export class ModListadoComponent implements OnInit{
     swal({title: 'Desactivar Cliente', text: '¿Seguro que desea desactivar al cliente ' + cliente +  ' ?', buttons: ['No', 'Si'], icon: "warning"}).then((response )=> {
       if(response){
         this.dataSource.data[indice].estatusId = 9;
-        swal("Cliente desactivado", "Para guardar los cambios, presione en el botón 'Guardar'", "success");
       }
     })
   }
@@ -59,6 +57,7 @@ export class ModListadoComponent implements OnInit{
   cargarClientes(){
     this.api.consultaDatos('administracion/clientes').subscribe((clientes: Array<Cliente>) => {
       this.dataSource = new MatTableDataSource<Cliente>(clientes);
+      this.dataSourceAuxiliar= clientes;
     })
   }
 
@@ -74,5 +73,39 @@ export class ModListadoComponent implements OnInit{
         this.cargarClientes();
       }
     })
+  }
+
+  bufferCambios: any[] = [];
+
+  filtrarDatos(texto: string, objeto: string){
+      //PRIMERO VEO SI ESE OBJETO YA ESTÁ FILTRADO, SI NO, ENTONCES LO PONGO EN EL BUFFER DE FILSTROS
+      const indiceCambios = this.bufferCambios.findIndex(ele => ele['objeto'] == objeto);
+      if(indiceCambios == -1){
+          this.bufferCambios.push({ valor:  texto , objeto: objeto });
+      }else{
+          //SI YA ESTABA, ENTONCES SOLO LE AGREGO EL NUEVO VALOR
+          this.bufferCambios[indiceCambios]['valor'] = texto;
+      }
+      console.log(this.bufferCambios);
+      //EN BASE A LOS FILTROS CONCATENADOS, FILTRO EL VECTOR AUXILIAR
+      this.dataSource.data = this.dataSourceAuxiliar.filter( (item: any) => {
+          let contador = 0;
+          //USO UN CONTADOR PARA IR CONTANDO LAS VECES QUE EL FILTRO ES CORRECTO, SE SUMA UNO POR CADA FILTRO CORRECTO DENTRO DEL VECTOR DE BUFFS
+          //EL REGISTRO ES CORRECTO SI EL OBJETO DE ESE REGISTRO ACTUAL ES IGUAL AL TEXTO 
+          this.bufferCambios.forEach( element=> {
+              if(item[element.objeto].toString().trim().toLowerCase().includes(element.valor.toLowerCase())){
+                  contador++;
+              }
+          })
+          //EN CASO DE QUE EL CONTADOR SEA IGUAL A LOS ELEMENTOS DENTRO DEL BUFFER, ENTONCES LO DEVUELÑVE
+          if (contador == this.bufferCambios.length) return item;
+      });
+      //Y CUANDO EL FILTRO ESTÉ VACÍO, ENTONCES LO ELIMINO DEL BUFFER
+      if(texto == ''){
+          this.bufferCambios.splice(indiceCambios, 1);
+      }
+
+      //MANEJO EL BUFFER PORQUE EN CASO DE QUE APLIQUEN FILTROS EN DESORDEN, EL SISTEMA NO VA A SABER CUÁL FUE EL ANTERIOR
+      //YA TENIENDO EL BUFFER, COMO RECORRE LOS FILTROS APLICADOS, ENTONCES NO IMPORTA EN QUÉ ORDEN LO MANEJES
   }
 }

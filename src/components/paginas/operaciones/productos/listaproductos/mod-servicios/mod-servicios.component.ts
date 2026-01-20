@@ -4,11 +4,10 @@ import { ApiService } from '../../../../../services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-mod-servicios',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-servicios.component.html',
-  styleUrl: './mod-servicios.component.css'
+    selector: 'app-mod-servicios',
+    imports: [CompartidosModule],
+    templateUrl: './mod-servicios.component.html',
+    styleUrl: './mod-servicios.component.css'
 })
 export class ModServiciosComponent implements OnInit{
   columnasDesplegadas = ['clave', 'nombre', 'precio', 'acciones'];

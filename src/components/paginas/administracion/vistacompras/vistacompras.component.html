@@ -2,10 +2,10 @@
 <div id = "contenido">
     <div class = "d-flex justify-content-around align-items-center">
         <div #qrCode style = "width: 160px; height: 160px;">
-            <qr-code [value] = "code" size = "160"></qr-code>
+            <qrcode [qrdata] = "code" [width] = "160"></qrcode>
         </div>
 
-        <h3 style = "text-align: end;">No. Orden de Compra: {{idOC}} </h3>
+        <h3 class="textOc" style="color: aliceblue;">No. Orden de Compra: {{idOC}} </h3>
     
         <button class = "btn btn-info" (click) = "imprimirPDF()" style = "max-height: 120px;"> 
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
@@ -15,15 +15,15 @@
         </button>
     </div>
     <br>
-    <div class = "d-flex justify-content-around">
-        <div style = "width: 48%;">
+    <div class = " flexcontent">
+        <div class="anchodiv" >
             <mat-card >
                 <mat-card-content>
-                    <mat-card-title style = "color:aliceblue; text-align: center;"> Facturar a: </mat-card-title>
+                    <mat-card-title class="titulosdiv"> Facturar a: </mat-card-title>
                 </mat-card-content>
             </mat-card>
             <br>
-            <mat-card>
+            <mat-card class="agrandarMat">
                 <mat-card-content style = "height: 25vh; overflow-y: auto;">
                     
                     <div class = "d-flex">
@@ -69,15 +69,15 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div style = "width: 48%;">
+        <div class="anchodiv salto" >
             <mat-card >
                 <mat-card-content>
-                    <mat-card-title style = "color:aliceblue; text-align: center;"> A favor de: </mat-card-title>
+                    <mat-card-title class="titulosdiv"> A favor de: </mat-card-title>
                 </mat-card-content>
             </mat-card>
             <br>
-            <mat-card>
-                <mat-card-content style = "height: 25vh; overflow-y: auto;">
+            <mat-card class="agrandarMat">
+                <mat-card-content class="matcardContent" >
                     
                     <div class = "d-flex">
                         <div style = "width: 50%;"><mat-label> Razón Social:  </mat-label></div>

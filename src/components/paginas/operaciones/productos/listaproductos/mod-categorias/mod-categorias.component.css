@@ -1,8 +1,75 @@
 section{
     padding: 30px;
     color: aliceblue;
+    background-color: #21222D;
 }
 
 h3{
     text-align: center;
+}
+
+mat-card{
+    background-color: #21222D;
+}
+mat-table{
+    background-color: #21222D;
+}
+
+::ng-deep .input mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    border-radius: 12px;
+    padding: 5px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    width: 9vw;
+  }
+
+  
+
+  .editbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+
+.elibtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.Prbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.Grbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }

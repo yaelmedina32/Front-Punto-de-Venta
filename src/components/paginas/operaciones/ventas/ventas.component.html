@@ -1,7 +1,8 @@
 <section>
     <br>
-    <h3 style = "text-align: center;">Ventas</h3>
-    <mat-card>
+    <h3 style = "text-align: center; color: aliceblue;" id="seccionProducto">Ventas</h3>
+    <div class="d-flex ParteSuperior" >
+    <mat-card >
         <mat-card-content>
             <div class = "d-flex justify-content-center">
                 <div class = "contenedor">
@@ -9,11 +10,12 @@
                 </div>
             </div>
             <br>
-            <mat-table #table [dataSource]="dataSource" class = "tabla">
+            <div class = "datosOC">
+            <mat-table #table [dataSource]="dataSourceProductos" class = "tabla">
                 <ng-container matColumnDef="seleccionar">
                     <mat-header-cell *matHeaderCellDef sticky> Selec </mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        <mat-checkbox (change)="$any($event.checked) ? element.seleccionado = true : element.seleccionado = false; agregarProducto()"> </mat-checkbox>
+                        <mat-checkbox [checked]="element.seleccionado" (change)="$any($event.checked) ? element.seleccionado = true : element.seleccionado = false; agregarProducto()"> </mat-checkbox>
                     </mat-cell>
                 </ng-container>
 
@@ -22,7 +24,7 @@
                     <mat-header-cell *matHeaderCellDef sticky> 
                         <mat-form-field appearance="outline">
                             <mat-label>Producto</mat-label> 
-                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'nombrefiltro')">
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'nombrefiltro')" [formControl] = "filtroNombreProducto">
                         </mat-form-field>    
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
@@ -34,7 +36,7 @@
                     <mat-header-cell *matHeaderCellDef sticky> 
                         <mat-form-field appearance="outline">
                             <mat-label>Marca</mat-label> 
-                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'marca')">
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'marca')" [formControl] = "filtroMarca">
                         </mat-form-field>        
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
@@ -46,7 +48,7 @@
                     <mat-header-cell *matHeaderCellDef sticky> 
                         <mat-form-field appearance="outline">
                             <mat-label>Modelo</mat-label> 
-                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'modelo')">
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'modelo')" [formControl] = "filtroModelo">
                         </mat-form-field>        
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
@@ -58,7 +60,7 @@
                     <mat-header-cell *matHeaderCellDef sticky> 
                         <mat-form-field appearance="outline">
                             <mat-label>DOT</mat-label> 
-                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'dot')">
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'dot')" [formControl] = "filtroDot">
                         </mat-form-field>        
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element">
@@ -66,32 +68,330 @@
                     </mat-cell>
                 </ng-container>
 
+                <ng-container matColumnDef="ubicacion">
+                    <mat-header-cell *matHeaderCellDef sticky> 
+                        <div class="d-flex flex-column">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Ubicación</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'ubicacionFiltrado')" [formControl] = "filtroUbicacion">
+                            <mat-hint style="font-size: 9px; margin: 0;">Pasillo-Anaquel-Nivel</mat-hint>
+                        </mat-form-field> 
+                        <!-- <span style="font-size: 10px;"> Pasillo- Anaquel- Nivel</span>     -->
+                        </div>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.ubicacion}}
+                    </mat-cell> 
+                </ng-container>
+           
+
                 <ng-container matColumnDef="precioventa">
                     <mat-header-cell *matHeaderCellDef sticky> P/U </mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        {{element.precioventa | currency: 'USD'}}
+                        <p>{{element.precioventa | currency: 'USD'}}</p>
                     </mat-cell>
                 </ng-container>
             <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
             </mat-table>
+        </div>
             <br>
-            <span> <strong>Total: </strong> {{totalVenta | currency: 'USD'}}</span>
             <br>
             <div class = "d-flex justify-content-end">
-                <button class = "btn btn-warning" (click) = "consultarVentas()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                <button class = "Cvbtn" (click) = "consultarVentas()">
+                    <svg style="color:#fad028 ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                         <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
                         <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-                    </svg> Consultar Ventas
+                    </svg> <span class="colorYellow" > &nbsp;Consultar Ventas</span>
                 </button> &nbsp;&nbsp;
 
-                <button class = "btn btn-success" (click)="realizarVenta()" [disabled] = "dataSource.data.length == 0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
-                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
-                    </svg> Vender
+                <button class = "lmpbtn" (click) = "limpiarSeleccion()" matTooltip="Limpiar todas las selecciones">
+                    <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg> <span style="color: #d049ff" > &nbsp;Limpiar Selección</span>
+                </button> &nbsp;&nbsp;
+
+                <div>
+                <button (click)=" realizarVenta()" class = "Grbtn seccion" [disabled] = "dataSourceProductos.data.length == 0 || !turnoAbierto" matTooltip="Boton para desplazarce hacia abajo y confirmar la venta">
+                    <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down colorGreen" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
+                    </svg> <span class="colorGreen" > &nbsp;Confirmar Venta</span>
                 </button>
             </div>
+            </div>
+      
         </mat-card-content>
     </mat-card>
+    <mat-card class="mat2" > 
+         <mat-card-content>
+            <div class = "d-flex justify-content-center">
+                <div class = "contenedor">
+                    <mat-card-title style = "color: aliceblue; margin-bottom: 3vh;"> Selección de Servicios</mat-card-title>
+                </div>
+            </div>
+            <mat-table [dataSource]="dataSourceServicios">
+                <ng-container matColumnDef="seleccionar">
+                    <mat-header-cell *matHeaderCellDef sticky> Selec </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        <mat-checkbox [checked]="element.seleccionadoS" (change)="$any($event.checked) ? element.seleccionadoS = true : element.seleccionadoS = false; agregarProducto()"> </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+
+                <ng-container matColumnDef="nombre">
+                    <mat-header-cell *matHeaderCellDef sticky>   
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nombre</mat-label> 
+                            <input type="text" matInput (keyup)="filtrarDatosServicios($any($event.target).value, 'nombre')">
+                        </mat-form-field> 
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.nombre}} 
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <mat-header-cell *matHeaderCellDef sticky>   
+                        Precio
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                        {{element.precio}}
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="columnasDesplegadas2; sticky: true"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnasDesplegadas2;"></mat-row>
+            </mat-table>
+            <br>
+            <span> <strong>Total: </strong> {{totalVentaServicio | currency: 'USD'}} </span>
+            <br>
+         </mat-card-content>
+        </mat-card>
+</div>
+<div id="seccionDestino" style="margin-top: 5%;"></div>
+<mat-card class="card-confirmar-venta" style="width: 98%;" >
+    <mat-card-content class="mat3" >
+        <div class = "d-flex justify-content-center"  style="width: 100%;"> 
+                <mat-card-title style = "color: aliceblue;"> Confirmar Venta </mat-card-title>
+        </div>
+        <div class = "d-flex justify-content-around">
+            <button (click)="irAbajo()" class="Prbtn seccion" matTooltip="Boton para desplazarce a las ventas" >
+                <span class="colorBlue" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/>
+                    </svg>
+                &nbsp; Productos</span></button>
+                
+                <!--BOTON PARA LIMPIAR LA SELECCION DE LOS PRODUCTOS QUE SE IBAN A VENDER-->
+                <button class = "lmpbtn" (click) = "limpiarSeleccion(); irAbajo()" matTooltip="Limpiar todas las selecciones">
+                    <svg style="color: #d049ff;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg> <span style="color: #d049ff;"> &nbsp;Limpiar Selección</span>
+                </button>
+        </div>
+        <br>
+        <div class=" d-flex cliente" style="width: 100%; justify-content: space-around;">
+ 
+        <h6 style="color: aliceblue;"> Total: {{totalVentaFinal | currency: 'USD'}} </h6>
+        <mat-form-field>
+            <mat-label> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            </svg> Ej. Juan Perez
+            </mat-label>
+            <input matInput [matAutocomplete]="auto" [formControl] = "cliente">
+            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarCliente($event)">
+                <mat-option *ngFor = "let item of clientesFiltrados | async" [value] = "item" id = "opcionesProducto" > 
+                    {{item}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+            </svg> Ej. 3056789012
+            </mat-label>
+            <input matInput [matAutocomplete]="autoNumero" [formControl] = "numeroCliente">
+            <mat-autocomplete #autoNumero="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarNumeroCliente($event)">
+                <mat-option *ngFor = "let item of numerosClientesFiltrados | async" [value] = "item" id = "opcionesProducto"> 
+                    {{item}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+  
+        <div class = "datosCv ">
+        <mat-table [dataSource]="dataSourceFinal"  class = "tabla" >
+            <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef sticky>
+                            Producto   
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element; let i = index;"  class="servicio apliColor">
+                    @if(element.nombreproducto != ''){
+                        {{element.nombreproducto}}
+                    }@else {
+                        <mat-form-field>
+                            <mat-label>Number</mat-label>
+                            <input type="text"
+                            placeholder="Pick one"
+                            aria-label="Number"
+                            matInput
+                            [formControl]="myControl"
+                            [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarProducto($event, i)">
+                                <ng-container *ngFor="let element of opcionesFiltradas">
+                                    <mat-option [value]="element" [attr.data-element]="element">
+                                       {{ element.nombreproducto }}
+                                        <span *ngIf="element.marca">-{{ element.marca }}</span>
+                                        <span *ngIf="element.modelo">-{{ element.modelo }}</span>
+                                        <span *ngIf="element.dot">-{{ element.dot }}</span>
+                                        <span *ngIf="element.ubicacion">-({{ element.ubicacion }})</span>
+                                    </mat-option>
+                                </ng-container>
+                                </mat-autocomplete>
+                        </mat-form-field>
+                    }
+                    @if(element.nombre != ''){
+                        {{element.nombre}}
+                    }
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="marca">
+                <mat-header-cell *matHeaderCellDef sticky> 
+                    <mat-form-field appearance="outline">
+                        <mat-label>Marca</mat-label> 
+                        <input type="text" matInput (keyup)="filtrarDatosFinal($any($event.target).value, 'marca')">
+                    </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.marca}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="ubicacion">
+                <mat-header-cell *matHeaderCellDef sticky> 
+                    Ubicación        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.ubicacion}}
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="cantidad">
+                <mat-header-cell *matHeaderCellDef sticky> Cantidad </mat-header-cell>
+                <mat-cell *matCellDef="let element; let i = index">
+                    @if(element.productoid != 0 && element.seleccionadoS || element.productoid != 0 && !element.seleccionado){
+                        <mat-form-field>
+                            <input type="number" matInput [(ngModel)] = "element.cantidad" (input)="validarInput(i, $any($event.target).value)" min="1">
+                          
+                        </mat-form-field>
+                    }@else {
+                        {{element.cantidad}}
+                    }
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="modelo">
+                <mat-header-cell *matHeaderCellDef sticky> 
+                    <mat-form-field appearance="outline">
+                        <mat-label>Modelo</mat-label> 
+                        <input type="text" matInput (keyup)="filtrarDatosFinal($any($event.target).value, 'modelo')">
+                    </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.modelo}}
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="dot">
+                <mat-header-cell *matHeaderCellDef sticky> 
+                    <mat-form-field appearance="outline">
+                        <mat-label>DOT</mat-label> 
+                        <input type="text" matInput (keyup)="filtrarDatosFinal($any($event.target).value, 'dot')">
+                    </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    {{element.dot}}
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="precioventa">
+                <mat-header-cell *matHeaderCellDef sticky> P/U </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <button class = "selectPrecio" [matTooltip]="'Doble click para cambiar el precio de venta'" (dblclick)="cambiarPrecioVenta(element)">
+                        @if(element.precioventa != ''){
+                            {{element.precioventa | currency: 'USD'}}
+                        }
+                        @if(element.precio != ''){
+                            {{element.precio | currency: 'USD'}}
+                        }
+                    </button>
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="descuento">
+                <mat-header-cell *matHeaderCellDef sticky> Desc </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    @if(!element.descuentoAutorizado){
+                        {{element.descuento | currency: 'USD'}}
+                    }@else {
+                        <mat-form-field>
+                            <input type="number" matInput [(ngModel)] = "element.descuento" (ngModelChange)="guardarDescuento(element)" min="0">
+                        </mat-form-field>
+                    }
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+                <mat-header-cell *matHeaderCellDef sticky> Acciones </mat-header-cell>
+                <mat-cell *matCellDef="let element; let i = index;">
+                    @if(element.inventarioid != 0){
+                    <button class = "descuento"  matTooltip="Habilitar Descuento" (click)="habilitarDescuento(element.inventarioid)" >
+                        <svg style="color:rgb(141, 216, 254) ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                            <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                        </svg>
+                    </button>  &nbsp;&nbsp; }
+                    @else{
+                        <button class = "descuento"  matTooltip="Habilitar Descuento" (click)="habilitarDescuentoServicio(element.productoid)" >
+                            <svg style="color:rgb(141, 216, 254) ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                                <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                            </svg>
+                        </button> &nbsp;&nbsp;
+                    }
+                    &nbsp;&nbsp; 
+                    <button class = "elibtn" (click)="eliminarProducto(i)"  matTooltip="Eliminar Producto" >
+                        <svg style="color:rgb(255, 0, 0);" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                    </button> 
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columnasDesplegadas3; sticky: true"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnasDesplegadas3;" ></mat-row>
+        </mat-table>
+        <button  style="background-color: transparent; border: none;" (click)="agregarServicio()"   matTooltip="Agregar un servicio o producto">
+            <svg style="color: #fad028;" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg> 
+        </button>&nbsp;&nbsp;
+        </div>
+        <div class = "contenedor-footer">
+            <mat-slide-toggle class = "slideIva" [(ngModel)]="banderaIVA" (change)="calcularTotalVenta($event.checked)"> IVA </mat-slide-toggle>
+            <button (click)=" realizarVentaFinal()" class = "Grbtn seccion" [disabled] = "dataSourceProductos.data.length == 0 || !turnoAbierto" matTooltip="Se realizara la venta de los productos y servicios seleccionados">
+                <svg style="color: #82f06cd6;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                    <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                </svg> <span class="colorGreen" > &nbsp;Vender</span>
+            </button>
+            <div class="totales-info">
+                <span> <strong>Sub Total: </strong> {{subTotal | currency: 'USD'}} </span>
+                <span> <strong>IVA: </strong> {{IVA | currency: 'USD'}} </span>
+                <span> Total Venta: {{totalVenta | currency: 'USD'}}</span>
+            </div>
+        </div>
+    </mat-card-content >
+</mat-card>
+<div style="margin-top: 30%;"></div>
 </section>

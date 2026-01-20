@@ -1,7 +1,9 @@
 export interface ListaProveedores {
     proveedorid: number,
     nombre: string,
-    telefono: string
+    telefono: string,
+    alias:string,
+    nombrefiltro: string,
 }
 
 export interface DatosProveedores{

@@ -3,11 +3,10 @@ import { CompartidosModule } from '../../../../../modulos/compartidos.module';
 import { ApiService } from '../../../../../services/api.service';
 
 @Component({
-  selector: 'app-mod-precios',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-precios.component.html',
-  styleUrl: './mod-precios.component.css'
+    selector: 'app-mod-precios',
+    imports: [CompartidosModule],
+    templateUrl: './mod-precios.component.html',
+    styleUrl: './mod-precios.component.css'
 })
 export class ModPreciosComponent implements OnInit{
   descuentoMax = 0;

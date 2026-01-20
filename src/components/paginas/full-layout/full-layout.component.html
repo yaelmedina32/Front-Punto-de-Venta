@@ -1,90 +1,174 @@
-<div class = "d-flex" id = "sidebar">
+<div class = "d-flex centrar" id = "sidebar" #centrar>
     <!-- background-image: url('/bgtotal.jpg');
     background-repeat: no-repeat;
     background-size: contain; -->
     <div class = "d-flex">
-      <div class="d-flex flex-column flex-shrink-0 p-3 bg-black navegacion barra" #navegacion  id = "menu">
+      <div class="d-flex p-3 bg-#171821 navegacionmin barra" #navegacion  id = "menu" #divUl (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave($event)">
         <div>
-          <a href="/inicio" class="d-flex justify-content-center b-3 mb-md-0 me-md-auto link-warning text-decoration-none" style = "margin-left: 2%;">
-            <!-- <img src="/distribuible_dctires/logo.jpg" alt="" style = "width: 50%; border-radius: 10px;"> &nbsp;&nbsp;&nbsp;&nbsp; -->
-            <img src="/logo.jpg" alt="" style = "width: 50%; border-radius: 10px;"> &nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="/inicio" class="d-flex justify-content-center b-3 mb-md-0 me-md-auto link-warning text-decoration-none">
+            <img src="/logo.jpg" alt="" style = "width: 85%; border-radius: 32px; margin-bottom: 10%;"> &nbsp;&nbsp;&nbsp;&nbsp;
             <!-- <span class="fs-4 text-white tituloSide">DCTires</span> -->
           </a>
         </div>
         <hr>
-        <div class = "divUl">
-          <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item" style = "margin-bottom: 5%;">
-              <!-- <a href="inicio" class="nav-link text-white link-warning" aria-current="page" matTooltip = "Inicio">
-                <div class = "d-flex">
-                  <p>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                      <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                    </svg>
-    
-                  </p> &nbsp;&nbsp;
-                  <span>Inicio</span>
-                </div>
-              </a> -->
-              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex;" [routerLink]="['/inicio']" id = "btnModulo">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+        <div class = "divUl"  >
+          <ul #centrarUl class="nav nav-pills flex-column mb-autoGr">
+            <div style="margin-bottom: 4vh;">
+            <li class="nav-item" style = "margin-bottom: 10%; ">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 60%; display: flex;" [routerLink]="['/inicio']" id = "btnModulo" matTooltip="Inicio">
+                  <svg #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-left:23px; ">
                     <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                  </svg>&nbsp;&nbsp; <span class = "spanItem">Inicio</span>
+                  </svg>
               </button>
             </li>
-            <br>
-            <li class = "nav-item">
-              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex;" id = "btnModulo" #btnModulo (click)="abrirMenu('admin')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                </svg>&nbsp;&nbsp; <span class = "spanItem">Administración</span>
+          </div>
+            <li class = "nav-item" >
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 60%; display: flex;" id = "btnModulo" #btnModulo (click)="abrirMenu('admin')" matTooltip="Administración">
+                <svg #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-menu-button-wide-fill" viewBox="0 0 16 16" style="margin-left:23px;">
+                  <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0zm1 2h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m9.927.427A.25.25 0 0 1 12.604 2h.792a.25.25 0 0 1 .177.427l-.396.396a.25.25 0 0 1-.354 0zM0 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm1 3v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm14-1V8a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2zM2 8.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+                </svg>
               </button>
-              <div #divAdmin id = "divAdmin">
+              <div #divAdmin id = "divAdmin" [style.display]="activeMenu === 'admin' ? 'flex' : 'none'" [style.justify-content]="activeMenu === 'admin' ? 'start' : 'flex-start'" [style.margin-bottom]="activeMenu === 'admin' ? '10%' : '0'">
                 <div style = "width: 70%;">
-                  <button mat-button id = "navButton" class = "nav-link text-white link-warning" aria-current="page">
+                  <button #menuPermiso mat-button  id = "1" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/administracion/compras']">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
                       <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
                       <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-                    </svg>&nbsp;&nbsp; <span class = "spanItem">Ordenes Compra</span>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Ordenes Compra</span>
                   </button>
-                  <button mat-button id = "navButton" class = "nav-link text-white link-warning" aria-current="page">
+                  <button #menuPermiso mat-button  id = "3" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['operaciones/productos/lista']">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify-left" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
-                    </svg>&nbsp;&nbsp; <span class = "spanItem">Listado Productos</span>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Listado Productos</span>
                   </button>
-                  <button mat-button id = "navButton" class = "nav-link text-white link-warning" aria-current="page">
+                  <button #menuPermiso mat-button  id = "4" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['operaciones/inventario/lista']">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-patch-check-fill" viewBox="0 0 16 16">
                       <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708"/>
-                    </svg>&nbsp;&nbsp; <span class = "spanItem">Inventario</span>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Inventario</span>
                   </button>
-                  <button mat-button id = "navButton" class = "nav-link text-white link-warning" aria-current="page">
+                  <button #menuPermiso mat-button  id = "9" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['administracion/turnos']">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-check" viewBox="0 0 16 16">
                       <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                       <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                    </svg>&nbsp;&nbsp; <span class = "spanItem">Turnos</span>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Turnos</span>
                   </button>
-                  <button mat-button id = "navButton" class = "nav-link text-white link-warning" aria-current="page">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-                      <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                      <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-                    </svg>&nbsp;&nbsp; <span class = "spanItem">Alta Clientes</span>
-                  </button>
-                  
+                </div>
                 </div>
               </div>
-
-              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex;" id = "btnModulo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-                </svg>&nbsp;&nbsp; <span class = "spanItem">Operaciones</span>
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex; margin-top: 14%;" id = "btnModulo" #btnModulo (click)="abrirMenu('operaciones')" matTooltip="Ventas">
+                <svg #Grande class="icono"  xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16" style="margin-left:23px">
+                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                </svg>
               </button>
-              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex;" id = "btnModulo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+              
+              
+              <div #divOperaciones id = "divAdmin" [style.display]="activeMenu === 'operaciones' ? 'flex' : 'none'" [style.justify-content]="activeMenu === 'operaciones' ? 'start' : 'flex-start'" [style.margin-bottom]="activeMenu === 'operaciones' ? '10%' : '0'">
+                <div style = "width: 70%;">
+                  <button #menuPermiso mat-button  id = "2" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/operaciones/ventas']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                      <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                    </svg> &nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Nueva Venta</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "11" class = "navButton nav-link text-white link-warning" aria-current="page" (click)="abrirConsultaVentas()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Consulta Venta</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "12" class = "navButton nav-link text-white link-warning" aria-current="page" (click)="abrirDevoluciones()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                      <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
+                      <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
+                      <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
+                    </svg> &nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Devoluciones</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "13" class = "navButton nav-link text-white link-warning" aria-current="page" (click)="abrirPagos()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Detalles Pagos</span>
+                  </button>
+                </div>
+              </div>
+              </div>
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex; margin-top: 14%;" id = "btnModulo" #btnModulo (click)="abrirMenu('catalogos')" matTooltip="Catalogos">
+                <svg #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16" style="margin-left:23px">
+                  <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                </svg>
+              </button>
+              <div #divCatalo id = "divAdmin" [style.display]="activeMenu === 'catalogos' ? 'flex' : 'none'" [style.justify-content]="activeMenu === 'catalogos' ? 'start' : 'flex-start'" [style.margin-bottom]="activeMenu === 'catalogos' ? '10%' : '0'">
+                <div style = "width: 70%;">
+                  <button #menuPermiso mat-button  id = "7" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/catalogos/marcas']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Marcas</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "14" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/configuraciones/formaspago']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                    </svg> &nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Formas Pago</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "6" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/operaciones/ubicaciones/lista']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"/>
+                      <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Ubicaciones</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "5" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/operaciones/proveedores/lista']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"/>
+                      <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Proveedores</span>
+                  </button>
+                  <button #menuPermiso mat-button  id = "15" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/operaciones/rechazos']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                    </svg>&nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Rechazos</span>
+                  </button>
+                </div>
+              </div>
+              </div>
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex; margin-top: 14%;" id = "btnModulo" #btnModulo (click)="abrirMenu('configuraciones')" [matTooltip]="'Configuraciones'">
+                <svg #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-left:23px">
                   <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
                   <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
-                </svg>&nbsp;&nbsp; <span class = "spanItem">Configuraciones</span>
+                </svg>
               </button>
+              <!--CONFIGURACIONES-->
+              <div #divconf id = "divAdmin">
+                <div style = "width: 70%;">
+                  <button #menuPermiso mat-button  id = "8" class = "navButton nav-link text-white link-warning" aria-current="page" [routerLink]="['/configuraciones/usuarios']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                      <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg> &nbsp;&nbsp; <span #ocultaLetra class = "spanItem">Permisos</span>
+                  </button>
+                </div>
+              </div>
+              </div>
+              <!--LOGOUT-->
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex; margin-top: 14%;" id = "btnModulo" #btnModulo (click)="logout()" matTooltip="Salir">
+                <svg  #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16" style="margin-left:23px">
+                  <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                  <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                </svg>
+              </button>
+              </div>
+              <div style="margin-bottom: 4vh;">
+              <button mat-button class = "nav-link text-white link-warning" aria-current="page" style = "width: 100%; display: flex; margin-top: 14%;" id = "btnModulo" #btnModulo disabled matTooltip="Perfil">
+                <svg  #Grande class="icono" xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16" style="margin-left:23px">
+                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                </svg>
+                &nbsp;&nbsp; <span #ocultaLetra class = "spanItem">{{nombreUsuario}}</span>
+              </button>
+              </div>
             </li>
             <!-- @for(item of permisos; track item;){
               <div #divDinamico style = "margin-bottom: 4%;"></div>
@@ -92,23 +176,18 @@
           </ul>
         </div>
         <hr>
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center link-white text-decoration-none dropdown-toggle text-white" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-            <p>{{nombreUsuario}}</p>
-          </a>
-          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-            <li><a class="dropdown-item" href="#">Configuraciones</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="" (click) = "logout()">Sign out</a></li>
-          </ul>
-        </div>
+
         <br>
       </div>
-      <div class = "contentMedio" #contenido style = "margin-left: 20%;">
+      <div class = "contentMedio" #contenido>
         <div id = "menuAlto">
-          <div class = "d-flex" style = "margin-top: 1%; width: 30%;">
-            <span style = "color: aliceblue; margin-top: 5%;"> Nombre Sucursal:  </span> &nbsp;&nbsp;
-            <mat-form-field  appearance="outline">
+          <!-- <div #ocultarimg class="header-logo">
+            <a routerLink="/inicio" class="linkinicio">
+              <img src="/logo.jpg" alt="Logo">&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+          </div> -->
+          <div class = "alinearvert">
+            <mat-form-field   style="width: 30vw;">
               <mat-select (selectionChange)="setSucursal()" [(ngModel)]="sucursalId" [(value)] = "sucursalId">
                 @for(item of sucursales; track item;){
                   <mat-option [value] = "item.sucursalId">
@@ -118,9 +197,8 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class = "d-flex" style = "margin-top: 1%; width: 30%;" *ngIf = "sucursalId != 0">
-            <span style = "color: aliceblue; margin-top: 5%;"> Almacén: </span> &nbsp;&nbsp;
-            <mat-form-field  appearance="outline">
+          <div class = "alinearvert"  *ngIf = "sucursalId != 0">
+            <mat-form-field   style="width: 30vw;">
               <mat-select (selectionChange)="setAlmacen()" [(ngModel)]="almacenId" [(value)] = "almacenId">
                 @for(item of almacenes; track item;){
                   <mat-option [value] = "item.almacenId">
@@ -130,33 +208,34 @@
               </mat-select>
             </mat-form-field>
           </div>
-          <div class = "d-flex align-items-center" style = "margin-top: 1%; width: 20%;" *ngIf = "sucursalId != 0">
-            <span> Estado: </span> &nbsp;&nbsp;
-            <span> <strong> {{estado}} </strong>  </span> &nbsp;&nbsp;
+          <div class = "estado" style = " width: 20%; margin-left: 20px;" *ngIf = "sucursalId != 0">
+            <span >  {{estado}} </span> &nbsp;&nbsp;
           </div>
 
-          <button class = "btn btn-success" (click)="abrirTurno()" *ngIf = "!turnoAbierto && sucursalId != 0"> 
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-check" viewBox="0 0 16 16">
-              <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708z"/>
-              <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.707l.547.547 1.17-1.951a.5.5 0 1 1 .858.514"/>
-            </svg> Abrir Turno </button>
-          <span *ngIf = "turnoAbierto"> Turno Abierto </span>
+          <button class = "colorbtn botonTurno" (click)="abrirTurno()" *ngIf = "!turnoAbierto && sucursalId != 0"> 
+          <span style="color: black;font-weight: bold; " class="texto-turno">Abrir Turno</span> </button>
+          <span *ngIf = "turnoAbierto" style="color: #FFAF25; "> Turno Abierto </span>
         </div>
-        <div style = "margin-left: 1%; height: 100vh;" class = "contenido">
+        <div id = "submenu" >
+          <div></div>
+          <div class="menudiv">
+            <button class="botonM " mat-raised-button (click)="openBottomSheet()"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg></button>
+          </div>
+        </div>
+        <div style = "margin-left: 1%;" class = "contenido">
           <router-outlet></router-outlet>
         </div>
         <div class="container">
-          <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <p class="col-md-4 mb-0 text-muted">&copy; 2022 DCTires</p>
-        
-            <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-              <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-            </a>
-          </footer>
+          <!-- <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+            <p class="col-md-4 mb-0 text-muted" style="color: aliceblue !important;">&copy; 2022 DCTires</p>
+          </footer> -->
         </div>
       </div>
     </div>
    
     <div>
     </div>
+    <app-notification></app-notification>
   </div>

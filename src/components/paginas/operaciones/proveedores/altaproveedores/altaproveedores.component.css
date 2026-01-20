@@ -9,9 +9,36 @@ section{
 }
 
 mat-hint{
-    color: orange;
+    color: rgba(169, 143, 58, 0.993);
 }
 
 mat-card-title{
     color: aliceblue;
 }
+mat-card{
+    background-color: #21222D !important;
+}
+mat-table{
+    background-color: #21222D !important;
+}
+.Grbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.colorGreen{
+    color: #82f06cd6;
+}
+::ng-deep .apliColor mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    padding: 5px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }

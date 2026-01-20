@@ -1,6 +1,7 @@
 <section>
-    <h3> Historial de Devoluciones </h3>
-    <mat-table [dataSource]="dataSource">
+    <h3 style="margin-top: 10px;"> Historial de Devoluciones </h3>
+    <div class="contenedor">
+    <mat-table [dataSource]="dataSource" class="apliColor">
 
         <ng-container matColumnDef="folioventa">
             <mat-header-cell *matHeaderCellDef> 
@@ -62,7 +63,21 @@
             </mat-cell>
         </ng-container>
 
+        
+        <ng-container matColumnDef="descripcionMotivo">
+            <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field appearance="outline">
+                    <mat-label> Descripción </mat-label>
+                    <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'descripcionMotivo')">
+                </mat-form-field>         
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                {{element.descripcionMotivo}}
+            </mat-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="columnasDesplegadas"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
     </mat-table>
+</div>
 </section>

@@ -1,13 +1,13 @@
 <div id = "bodyProductos" class = "col-sm-12">
-    <h3 style = "text-align: center;">Edición de productos</h3>
+    <h3 style = "text-align: center; color: aliceblue;">Edición de productos</h3>
     <br>
     <mat-card>
         <mat-card-content >
-            <div class = "w-25" id = "tituloCard">
-                <span> <strong>{{estatus == 'nueva' ? 'Alta' : estatus == 'edicion' ? 'Edición' : 'Vista'}} de llantas </strong></span>
+            <div class = "w-25%" id = "tituloCard">
+                <span class="fondo" style="color: aliceblue;" > {{estatus == 'nueva' ? 'Alta' : estatus == 'edicion' ? 'Edición' : 'Vista'}} de llantas </span>
             </div>
             <br>
-            <div class = "d-flex gap-3">
+            <div class = "d-flex gap-3 edicionForm">
     
                 <mat-form-field style = "width: 100%;">
                     <mat-label>Nombre del producto</mat-label>
@@ -15,7 +15,7 @@
                 </mat-form-field>
             </div>
 
-            <div class = "d-flex gap-3">
+            <div class = "divprincipal edicionForm">
                 <mat-form-field style = "width: 100%;">
                     <span>IVA</span>
                     <mat-select placeholder="Seleccionar" [disabled] = "estatus == 'vista'" [(ngModel)]="iva">
@@ -31,7 +31,7 @@
                     <span>Categoría</span>
                     <mat-select placeholder="Seleccionar" [disabled] = "estatus == 'vista'" [(ngModel)]="categoria" (selectionChange)="seleccionarCategoria()">
                         @for (item of categorias; track item) {
-                            <mat-option [value]="item.categoriaId">
+                            <mat-option [value]="item.categoriaId"  *ngIf="item.categoriaId !== 2">
                                 {{item.nombre}}
                             </mat-option>
                         }
@@ -39,20 +39,23 @@
                 </mat-form-field>
 
                 <mat-form-field style = "width: 100%;">
-                    <span>Marca</span>
-                    <mat-select placeholder="Seleccionar" [disabled] = "estatus == 'vista'" [(value)]="marca" [(ngModel)] = "marca">
-                        @for (item of marcas; track item) {
-                            <mat-option [value]="item.nombre">
-                                {{item.nombre}}
-                            </mat-option>
-                        }
-                    </mat-select>
+                    <mat-label>Marca</mat-label>
+                    <input matInput [formControl] = "marcass" [matAutocomplete]="auto2">
+                    <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption="">
+                        <mat-option *ngFor = "let actual of marcasFiltradas | async" [value] = "actual.nombre"> 
+                        {{actual.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Precio de Compra</mat-label>
+                    <input matInput [formControl] = "preciocompra" >
                 </mat-form-field>
             </div>
 
             <div *ngIf = "categoria == 3">
                 <span>Datos complementarios</span>
-                <div class = "d-flex gap-3">
+                <div class = "d-flex gap-3 edicionForm">
 
                     <mat-form-field style = "width: 100%;">
                         <mat-label>Modelo</mat-label>
@@ -69,9 +72,10 @@
                             }
                         </mat-select>
                     </mat-form-field>
+
                 </div>
     
-                <div class = "d-flex gap-3">
+                <div class = "d-flex gap-3  edicionForm">
                     <mat-form-field style = "width: 100%;" color="primary" background = "red">
                         <mat-label>Ancho del producto</mat-label>
                         <input type="number" matInput placeholder="Ej. 12" [formControl] = "ancho" (ngModelChange)="cargarNombre()">
@@ -83,7 +87,7 @@
                     </mat-form-field>
                 </div>
     
-                <div class = "d-flex gap-3">
+                <div class = "divprincipal edicionForm">
                     <mat-form-field style = "width: 100%;">
                         <span>R o C</span>
                         <mat-select placeholder="Seleccionar" [disabled] = "estatus == 'vista'" [(ngModel)]="roc" (selectionChange)="cargarNombre()">
@@ -107,7 +111,7 @@
                     </mat-form-field>
                 </div>
     
-                <div class = "d-flex gap-3">
+                <div class = "divprincipal edicionForm">
                     <mat-form-field style = "width: 100%;">
                         <mat-label>Letra de Velocidad</mat-label>
                         <mat-select placeholder="Letra de Velocidad" [(ngModel)]="letraVelocidadId">
@@ -133,11 +137,11 @@
 
 
             <div class = "d-flex gap-3 justify-content-end">
-                <button class = "btn btn-success" (click)="guardarProducto()"> 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                <button class = "Grbtn" (click)="guardarProducto()"> 
+                    <svg style="color:#82f06cd6 ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                         <path d="M11 2H9v3h2z"/>
                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                    </svg> Guardar
+                    </svg><span style="color: #82f06cd6;"> &nbsp;Guardar</span>
                 </button>
             </div>
         </mat-card-content>

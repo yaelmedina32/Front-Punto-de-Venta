@@ -5,11 +5,10 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-clientes',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './clientes.component.html',
-  styleUrl: './clientes.component.css'
+    selector: 'app-clientes',
+    imports: [CompartidosModule],
+    templateUrl: './clientes.component.html',
+    styleUrl: './clientes.component.css'
 })
 export class ModClientesComponent implements OnInit{
   nombre = new FormControl();

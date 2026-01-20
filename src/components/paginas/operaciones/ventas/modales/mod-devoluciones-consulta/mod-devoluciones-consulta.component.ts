@@ -9,20 +9,20 @@ export class Devolucion{
   fechadevolucion: string;
   motivo: string;
   precioventa: number;
+  descripcionMotivo : string;
 }
 
 @Component({
-  selector: 'app-mod-devoluciones-consulta',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-devoluciones-consulta.component.html',
-  styleUrl: './mod-devoluciones-consulta.component.css'
+    selector: 'app-mod-devoluciones-consulta',
+    imports: [CompartidosModule],
+    templateUrl: './mod-devoluciones-consulta.component.html',
+    styleUrl: './mod-devoluciones-consulta.component.css'
 })
 export class ModDevolucionesConsultaComponent implements OnInit{
 
   dataSource = new MatTableDataSource<Devolucion>();
   dataSourceAuxiliar: Array<Devolucion> = [];
-  columnasDesplegadas = ['folioventa', 'nombre', 'fecha', 'motivo', 'precioventa'];
+  columnasDesplegadas = ['folioventa', 'nombre', 'fecha', 'descripcionMotivo', 'motivo', 'precioventa'];
 
   constructor(private api: ApiService) { }
 

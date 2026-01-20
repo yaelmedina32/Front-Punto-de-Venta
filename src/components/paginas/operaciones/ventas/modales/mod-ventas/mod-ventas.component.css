@@ -1,6 +1,7 @@
 h3{
     color: aliceblue;
     text-align: center;
+    width: 100%;
 }
 
 h6{
@@ -9,9 +10,164 @@ h6{
 
 section{
     padding: 20px;
+    background-color: inherit;
+    width: 82vw;
+}
+@media screen and (max-width:1000px) {
+    section{
+     
+        padding: 20px;
+        width: 250%;
+    }
+    .datosOC{
+        width: 148%;
+        overflow-x: auto;
+    }
+}
+
+.viewport-ventas {
+    height: calc(100vh - 160px);
+    width: 100%;
+    overflow: auto;
 }
 
 mat-table{
-    max-height: 40vh;
-    overflow-y: auto;
+    background-color: inherit;
+    width: 100%;
+}
+
+mat-header-cell, mat-cell{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.acciones-column{
+    display: flex;
+    justify-content: start;
+}
+
+
+mat-header-cell:nth-child(1), mat-cell:nth-child(1){
+    width: 100px;
+}
+
+.divGrid{
+    display: grid;
+    grid-template-columns: 95% auto;
+    margin-right: 2%;
+}
+
+.editbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+.elibtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.elisupbtn{
+    align-items: center; 
+    padding: 15px 15px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorRed{
+    color:rgb(255, 0, 0);
+}
+
+.pagobtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #f9d44058; 
+    border: 1px solid #fad028;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorYellow{
+    color: #fad028;
+}
+
+
+:ng-deep  .mdc-switch__track::before, .mdc-switch__track::after {
+    border: none !important;}
+
+  ::ng-deep  .mdc-switch__track::before {
+background-color: #171821 !important;
+  }
+  ::ng-deep   .mdc-switch__icons {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: white !important;
+    border-radius: 20px    !important;
+}
+
+::ng-deep .mdc-switch__track::after {
+    transform: translateX(-100%);
+    background: #a6a7a988 !important;
+}
+
+
+::ng-deep .apliColor mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    padding: 5px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    width: 100% !important;
+  }
+::ng-deep .mat-mdc-row{ min-height: 56px; }
+::ng-deep .mat-mdc-header-row{ min-height: 56px; }
+
+mat-row:hover{
+    background-color: #171821 !important;
+}
+::ng-deep .multiline-tooltip{ white-space: pre-line; }
+
+.button-text{
+    background-color: #171821;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px 0px rgba(78, 78, 78, 0.75);
+    align-self: center;
+    cursor: pointer;
+}
+
+.button-text:hover{
+    background-color: inherit;
+}
+
+.Cvbtn{
+    background-color: #182ce4;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px 0px rgba(78, 78, 78, 0.75);
+    align-self: center;
+    cursor: pointer;
+}
+.Cvbtn:hover{
+    background-color: inherit;
 }

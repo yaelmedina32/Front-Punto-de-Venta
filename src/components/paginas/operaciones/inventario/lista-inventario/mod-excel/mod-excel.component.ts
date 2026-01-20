@@ -6,11 +6,10 @@ import * as ExcelJS from 'exceljs';
 import * as fs from 'file-saver';
 
 @Component({
-  selector: 'app-mod-excel',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-excel.component.html',
-  styleUrl: './mod-excel.component.css'
+    selector: 'app-mod-excel',
+    imports: [CompartidosModule],
+    templateUrl: './mod-excel.component.html',
+    styleUrl: './mod-excel.component.css'
 })
 export class ModExcelComponent implements OnInit{
   columnasDesplegadasLetras = ['letra']
@@ -78,7 +77,6 @@ export class ModExcelComponent implements OnInit{
     swal({title: 'Guardar Datos', text: '¿Seguro de que desea guardar los datos al excel? \nSe insertarán los datos faltantes', buttons: ['No', 'Si'], icon: "warning"}).then((response) => {
       if(response){
         this.api.insertarDatos('operaciones/inventario/excel/faltantes', this.data).subscribe((response) => {
-          swal("Datos insertados", "Se insertaron los datos correctamente", "success");
           this.dialogRef.close();
         })
       }

@@ -7,15 +7,14 @@ import { OrdenesCompra } from '../compras/compras.interface';
 import jsPDF from 'jspdf';
 import autotable from 'jspdf-autotable';
 import { formatCurrency } from '@angular/common';
-import { QrCodeModule } from 'ng-qrcode'
+import { QRCodeComponent  } from 'angularx-qrcode'
 import html2canvas from 'html2canvas';
 
 @Component({
-  selector: 'app-vistacompras',
-  standalone: true,
-  imports: [CompartidosModule, QrCodeModule],
-  templateUrl: './vistacompras.component.html',
-  styleUrl: './vistacompras.component.css'
+    selector: 'app-vistacompras',
+    imports: [CompartidosModule, QRCodeComponent ],
+    templateUrl: './vistacompras.component.html',
+    styleUrl: './vistacompras.component.css'
 })
 export class VistaComprasComponent implements OnInit, AfterViewInit{
   private ruta: any;
@@ -129,13 +128,14 @@ export class VistaComprasComponent implements OnInit, AfterViewInit{
       console.log(valorY);
       doc.setTextColor(0,0,0);
       doc.setFontSize(12);
-      doc.text('Importe: ' + formatCurrency(this.ordencompra[0].importetotal, 'en-US', '$', 'USD'), 160, valorY);
       
-      doc.text('IVA: ' + formatCurrency(this.ordencompra[0].importetotal * 0.16, 'en-US', '$', 'USD'), 160, (valorY + 7));
+      
+      doc.text('IVA: ' + formatCurrency(this.ordencompra[0].importetotal * 0.16, 'en-US', '$', 'USD'), 160, (valorY));
+      doc.text('Importe: ' + formatCurrency(this.ordencompra[0].importetotal, 'en-US', '$', 'USD'), 160, (valorY + 7));
       
       const imaData = canvas.toDataURL('image/png');
       doc.addImage(imaData, 'PNG',180,25,18,18);
-      doc.save('tabla.pdf');
+      doc.save('oc' + this.idOC + '.pdf');
 
     })
   }
@@ -147,7 +147,6 @@ export class VistaComprasComponent implements OnInit, AfterViewInit{
         this.proveedor = proveedor;
         this.api.consultaDatos('administracion/productos/ordencompra/' + this.idOC).subscribe((datosOC: Array<any>) => {
           this.datosOC = datosOC;
-          console.log('holaaaaaaaaaaa' , this.datosOC);
           this.generarCodigoQR();
         })
       })

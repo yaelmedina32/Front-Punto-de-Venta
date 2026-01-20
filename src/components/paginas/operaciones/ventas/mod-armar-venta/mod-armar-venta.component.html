@@ -1,19 +1,42 @@
 <section>
-    <h3> {{data[0].lectura ? 'Detalles Venta' : 'Confirmación Venta'}} </h3>
+    @if (data[0]) {
+        <h3> {{data[0].lectura ? 'Detalles Venta' : 'Confirmación Venta'}} </h3>
+    } @else {
+        <h3 style="color: aliceblue;"> Confirmación de Venta </h3>
+    }
     <div class = "d-flex justify-content-around" id = "footer">
         <h6> Total: {{totalVenta | currency: 'USD'}} </h6>
-        <h6 *ngIf = "data[0].folioventa"> Folio Venta: {{data[0].folioventa}} </h6>
+        <h6 *ngIf = "data[0]"> Folio Venta: {{data[0].folioventa}} </h6>
         <mat-form-field>
-            <mat-label> Nombre del Cliente </mat-label>
+            <mat-label> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            </svg> Ej. Juan Perez
+            </mat-label>
             <input matInput [matAutocomplete]="auto" [formControl] = "cliente">
-            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarCliente()">
-                <mat-option *ngFor = "let item of clientesFiltrados | async" [value] = "item.nombre" id = "opcionesProducto"> 
-                    {{item.nombre}}
+            <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarCliente($event)">
+                <mat-option *ngFor = "let item of clientesFiltrados | async" [value] = "item" id = "opcionesProducto" > 
+                    {{item}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+            </svg> Ej. 3056789012
+            </mat-label>
+            <input matInput [matAutocomplete]="autoNumero" [formControl] = "numeroCliente">
+            <mat-autocomplete #autoNumero="matAutocomplete" autoActiveFirstOption="" (optionSelected)="seleccionarNumeroCliente($event)">
+                <mat-option *ngFor = "let item of numerosClientesFiltrados | async" [value] = "item" id = "opcionesProducto"> 
+                    {{item}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
     </div>
-    <mat-table [dataSource]="dataSource">
+    <div class = "datosOC">
+    <mat-table [dataSource]="dataSource"  class = "tabla">
         <ng-container matColumnDef="nombre">
             <mat-header-cell *matHeaderCellDef sticky> 
                 <mat-form-field appearance="outline">
@@ -21,7 +44,7 @@
                     <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'nombrefiltro')">
                 </mat-form-field>    
             </mat-header-cell>
-            <mat-cell *matCellDef="let element; let i = index;">
+            <mat-cell *matCellDef="let element; let i = index;"  class="servicio">
                 @if(element.nombreproducto != ''){
                     {{element.nombreproducto}}
                 }@else {
@@ -34,6 +57,9 @@
                             }
                         </mat-select>
                     </mat-form-field>
+                }
+                @if(element.nombre != ''){
+                    {{element.nombre}}
                 }
             </mat-cell>
         </ng-container>
@@ -55,7 +81,7 @@
             <mat-cell *matCellDef="let element; let i = index">
                 @if(element.productoid != 0){
                     <mat-form-field>
-                        <input type="number" matInput [(ngModel)] = "element.cantidad" (keyup)="validarInput(i, $any($event.target).value)">
+                        <input type="number" matInput [(ngModel)] = "element.cantidad" (keyup)="validarInput(i, $any($event.target).value)"min="1">
                     </mat-form-field>
                 }@else {
                     {{element.cantidad}}
@@ -90,14 +116,19 @@
         <ng-container matColumnDef="precioventa">
             <mat-header-cell *matHeaderCellDef sticky> P/U </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                {{element.precioventa | currency: 'USD'}}
+                @if(element.precioventa != ''){
+                    {{element.precioventa | currency: 'USD'}}
+                }
+                @if(element.precio != ''){
+                    {{element.precio | currency: 'USD'}}
+                }
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="descuento">
             <mat-header-cell *matHeaderCellDef sticky> Desc </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                @if(!element.autorizadoDescuento){
-                    {{element.descuento}}
+                @if(!element.descuentoAutorizado){
+                    {{element.descuento | currency: 'USD'}}
                 }@else {
                     <mat-form-field>
                         <input type="number" matInput [(ngModel)] = "element.descuento">
@@ -108,9 +139,15 @@
         <ng-container matColumnDef="acciones">
             <mat-header-cell *matHeaderCellDef sticky> Acciones </mat-header-cell>
             <mat-cell *matCellDef="let element; let i = index;">
-                <button class = "btn btn-primary"  [disabled]="element.productoid == 0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                <button class = "desbtn" (click)="habilitarDescuento(element.inventarioid)" matTooltip="Habilitar Descuento">
+                    <svg style="color: rgb(141, 216, 254);" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
                         <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                    </svg>
+                </button> &nbsp;&nbsp;
+                <button class = "elibtn" (click)="eliminarProducto(i)" matTooltip="Eliminar Producto">
+                    <svg style="color:rgb(255, 0, 0);" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                     </svg>
                 </button>
             </mat-cell>
@@ -118,25 +155,21 @@
         <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
     </mat-table>
+</div>
     <br>
-  
-    <div *ngIf="!data[0].lectura" class = "d-flex justify-content-end" >
-        <button class = "btn btn-warning" (click)="agregarCliente()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+    <div *ngIf="!data[0] || !data[0].lectura" class = "d-flex justify-content-end" >
+        
+        <button class = "Cvbtn" (click)="agregarServicio()">
+            <svg style="color:#fad028;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-            </svg> Cliente
+            </svg> <span class="colorYellow">&nbsp;Servicio</span>
         </button> &nbsp;&nbsp;
-        <button class = "btn btn-warning" (click)="agregarServicio()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-            </svg> Servicio
-        </button> &nbsp;&nbsp;
-        <button class = "btn btn-success" (click)="guardarVenta()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+        <button class = "Grbtn" (click)="guardarVenta()">
+            <svg style="color: #82f06cd6;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                 <path d="M11 2H9v3h2z"/>
                 <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-            </svg> Venta
+            </svg>  <span class="colorGreen">&nbsp;Venta</span>
         </button>
-    </div>
-
+    </div>    
+    
 </section>

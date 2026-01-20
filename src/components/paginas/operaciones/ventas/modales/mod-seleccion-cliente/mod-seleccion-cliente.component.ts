@@ -8,11 +8,10 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModClientesComponent } from '../../../../administracion/clientes/clientes.component';
 
 @Component({
-  selector: 'app-mod-seleccion-cliente',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-seleccion-cliente.component.html',
-  styleUrl: './mod-seleccion-cliente.component.css'
+    selector: 'app-mod-seleccion-cliente',
+    imports: [CompartidosModule],
+    templateUrl: './mod-seleccion-cliente.component.html',
+    styleUrl: './mod-seleccion-cliente.component.css'
 })
 export class ModSeleccionClienteComponent implements OnInit{
 

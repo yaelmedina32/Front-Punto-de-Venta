@@ -1,0 +1,196 @@
+/* Layout base */
+.generar-oc-section {
+  width: 100%;
+  position: relative;
+  height: 550px;
+}
+
+.datosOC-table{
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+.mat-card {
+  width: 100%;
+  background-color: transparent !important;
+  position: absolute;
+  height: 100%;
+}
+
+.generaOC {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.card-subtitle, mat-card-subtitle {
+  color: aliceblue;
+}
+
+/* Grids y formularios */
+.agrandar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 900px) {
+  .agrandar {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.expandir mat-form-field,
+.agrandar mat-form-field,
+form mat-form-field {
+  width: 100%;
+}
+
+/* Tablas */
+.datosOC mat-table,
+.sinInventario mat-table {
+  width: 100%;
+  overflow-x: auto;
+  background-color: transparent;
+}
+
+mat-header-cell, mat-cell {
+  padding: 8px 12px;
+}
+
+.producto-col {
+  min-width: 240px;
+}
+
+.inventariosin {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .inventariosin {
+    justify-content: flex-start;
+  }
+}
+
+/* Botonera */
+.boton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: end;
+  padding: 12px 12px;
+}
+
+.Ocbtn {
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(10, 244, 213, 0.215);
+  border: 1px solid rgb(137, 255, 240);
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.Prbtn {
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(18, 129, 185, 0.447);
+  border: 1px solid rgb(141, 216, 254);
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.elibtn {
+  align-items: center;
+  padding: 10px 15px;
+  background-color: rgba(255, 0, 0, 0.142);
+  border: 1px solid rgb(255, 0, 0);
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.Grbtn {
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #82f06c3b;
+  border: 1px solid #82f06cd6;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.tamaño {
+  min-width: 140px;
+}
+
+@media (max-width: 768px) {
+  .tamaño {
+    min-width: unset;
+    width: auto;
+  }
+  .ocultar-texto {
+    display: none;
+  }
+}
+
+/* Colores utilitarios */
+.color { color: rgb(137, 255, 240); }
+.colorBlue { color: rgb(141, 216, 254); }
+.colorGreen { color: #82f06cd6; }
+
+/* Angular Material text-field estilo sin forzar ancho */
+::ng-deep mat-form-field .mdc-text-field {
+  background-color: #171821 !important;
+  border-radius: 12px;
+  padding: 5px;
+  border: none;
+}
+
+/* Columnas de la tabla en pantallas grandes */
+@media (min-width: 1024px) {
+  .mat-column-producto { flex: 0 0 24%; }
+  .mat-column-precio { flex: 0 0 14%; }
+  .mat-column-cantidad { flex: 0 0 10%; }
+  .mat-column-unidad { flex: 0 0 12%; }
+}
+
+/* Switch de inventario posterior (conservar estilo) */
+.mdc-switch__track::before, .mdc-switch__track::after {
+  border: none !important;
+}
+
+.mdc-switch__track::before {
+  background-color: #171821 !important;
+}
+
+.mdc-switch__icons {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  background-color: white !important;
+  border-radius: 20px !important;
+}
+
+.mdc-switch__track::after {
+  transform: translateX(-100%);
+  background: #a6a7a988 !important;
+}
+
+.producto-col .mat-mdc-form-field-flex{
+    background-color: #41363d !important;
+    padding-left: 15px !important;
+}
+
+.generar-oc-section .mat-mdc-form-field-flex, .generar-oc-section .mat-mdc-text-field-wrapper{
+    background-color: #30313d !important;
+}

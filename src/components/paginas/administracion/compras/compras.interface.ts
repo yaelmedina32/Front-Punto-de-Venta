@@ -10,4 +10,5 @@ export interface OrdenesCompra {
     pendiente: number,
     descripcion: string,
     nofactura: string,
+    ventas: string,
 }

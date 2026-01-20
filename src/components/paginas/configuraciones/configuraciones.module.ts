@@ -6,15 +6,9 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { FormasPagoComponent } from './formas-pago/formas-pago.component';
 
 export const routes: Routes = [
-  {
-    path: '', component: InicioComponent
-  },
-  {
-    path: 'usuarios', component: UsuariosComponent
-  },
-  {
-    path: 'formaspago', component: FormasPagoComponent
-  }
+  { path: '', component: InicioComponent, data: { breadcrumb: 'Inicio' } },
+  { path: 'usuarios', component: UsuariosComponent, data: { breadcrumb: 'Usuarios' } },
+  { path: 'formaspago', component: FormasPagoComponent, data: { breadcrumb: 'Formas de Pago' } },
 ]
 
 @NgModule({

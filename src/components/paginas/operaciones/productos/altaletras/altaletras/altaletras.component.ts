@@ -8,11 +8,10 @@ letraVelocidadId: number;
   nuevo: number = 0;
 }
 @Component({
-  selector: 'app-altaletras',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './altaletras.component.html',
-  styleUrl: './altaletras.component.css'
+    selector: 'app-altaletras',
+    imports: [CompartidosModule],
+    templateUrl: './altaletras.component.html',
+    styleUrl: './altaletras.component.css'
 })
 export class AltaletrasComponent implements OnInit {
   dataSource = new MatTableDataSource<formasPago>();

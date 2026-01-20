@@ -1,11 +1,14 @@
 <section>
-    <h3> Abonar a Cuentas por Cobrar </h3>
+    <h3 style="color: aliceblue;"> Pago de Venta </h3>
     <div class = "d-flex justify-content-around">
         <h6>Folio: {{data.ventaid}}</h6>
         <h6>Cliente: {{nombreCliente}}</h6>
-        <h6>Total: {{totalDeuda | currency: 'USD'}}</h6>
+        <h6> <i> Subtotal: {{subTotalDeuda | currency: 'USD'}} </i> </h6>
+        <h6> <i>IVA: {{IVA | currency: 'USD'}} </i> </h6>
+        <h6> <i>Total: {{totalDeuda | currency: 'USD'}} </i> </h6>
         <h6>Restante: {{restante | currency: 'USD'}}</h6>
     </div> 
+    <div class = "datosOC">
     <mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="foliopago">
@@ -20,7 +23,7 @@
             <mat-header-cell *matHeaderCellDef> Tipo de Pago </mat-header-cell>
             <mat-cell *matCellDef="let element">   
                 <mat-form-field appearance="outline">
-                    <mat-select placeholder="Tipo de Pago" [(ngModel)]="element.tipopagoid">
+                    <mat-select placeholder="Tipo de Pago" [(ngModel)]="element.tipoId">
                         @for(item of tipoPagos; track item){
                             <mat-option [value] = "item.tipoId">
                                 {{item.descripcion}}
@@ -34,13 +37,9 @@
         <ng-container matColumnDef="monto">
             <mat-header-cell *matHeaderCellDef> Monto </mat-header-cell>
             <mat-cell *matCellDef="let element">
-                @if(element.pagoid != 0){
-                    {{element.monto}}
-                }@else {
-                    <mat-form-field appearance="outline">
-                        <input type="number" matInput [(ngModel)] = "element.monto">
-                    </mat-form-field>
-                }
+                <mat-form-field appearance="outline">
+                    <input type="number" matInput [(ngModel)] = "element.monto">
+                </mat-form-field>
             </mat-cell>
         </ng-container>
 
@@ -60,10 +59,9 @@
 
         <ng-container matColumnDef="acciones">
             <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-            <mat-cell *matCellDef="let element" class = "botones">
-
-                <button class = "btn btn-danger" (click) = "marcarEliminado(element.pagoid)" [disabled] = "element.nuevo == 1"> 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+            <mat-cell *matCellDef="let element; let i = index" class="botones">
+                <button class = "elibtn" (click) = "marcarEliminado(element.pagoid,i)" *ngIf = "i != 0">
+                    <svg style="color: rgb(255, 0, 0);" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
                     </svg>  
@@ -73,68 +71,31 @@
         <mat-header-row *matHeaderRowDef="columnasDesplegadas"></mat-header-row>
         <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
     </mat-table>
-    <div *ngIf = "tipoPagoId == 0" class = "divMixtos w-50">
-
-        <mat-table [dataSource]="dataSourcePagosMixtos">
-
-            <ng-container matColumnDef="descripcion">
-                <mat-header-cell *matHeaderCellDef sticky> Tipo de Pago </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                    <mat-form-field appearance="outline">
-                        <mat-select [(value)] = "element.tipoid" (selectionChange)="validarPagos()" [disabled]="element.nuevo != 1">
-                            @for(item of tipoPagosMixtos; track item){
-                                <mat-option [value] = "item.tipoId" [disabled]="item.seleccionado == true">
-                                    {{item.descripcion}}
-                                </mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                </mat-cell> 
-            </ng-container>
-
-            <ng-container matColumnDef="monto">
-                <mat-header-cell *matHeaderCellDef sticky> Monto </mat-header-cell>
-                <mat-cell *matCellDef="let element; let i = index;">
-                    <mat-form-field>
-                        <input type="number" matInput [(ngModel)]="element.monto" (keyup)="validarInput(i, $any($event.target).value)">
-                    </mat-form-field>
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="eliminar">
-                <mat-header-cell *matHeaderCellDef sticky> Eliminar </mat-header-cell>
-                <mat-cell *matCellDef="let element; let i = index;">
-                    <button class = "btn btn-danger" (click)="eliminarPagoMixto(i)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                        </svg>  
-                    </button>
-                </mat-cell>
-            </ng-container>
-
-
-            <mat-header-row *matHeaderRowDef="columnasDesplegadasMixtos"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnasDesplegadasMixtos;"></mat-row>
-        </mat-table>
-        <div class = "d-flex justify-content-end">
-            <button class = "btn btn-primary" (click)="seleccionarPagosMixtos()">
-                Agregar Pago
-            </button>
+    
+    @for (detalle of detalleVenta; track detalle.producto) {
+        <div class="d-flex justify-content-end gap-4">
+            <h6>* {{detalle.producto}} x{{detalle.cantidad}}</h6> -
+            <h6>{{detalle.precioventa | currency: 'USD'}}</h6>
         </div>
-    </div>
+    }
+</div> 
     <br>
     <div class = "d-flex justify-content-end align-items-center">
-        <button class = "btn btn-warning" (click)="agregarAbono()" [disabled] = "!turnoAbierto">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+        <button class = "Cvbtn" (click)="agregarAbono()" [disabled] = "!turnoAbierto">
+            <svg style="color: #fad028 ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-            </svg> Abono
+            </svg><span class="colorYellow">&nbsp;&nbsp;Abono</span> 
         </button> &nbsp;&nbsp;
-        <button class = "btn btn-success" (click)="guardarAbonos()" [disabled] = "!turnoAbierto">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+        <button class = "Grbtn" (click)="guardarAbonos()" [disabled] = "!turnoAbierto">
+            <svg style="color:#82f06cd6 ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                 <path d="M11 2H9v3h2z"/>
                 <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-            </svg> Guardar
+            </svg> <span class="colorGreen">&nbsp;&nbsp;Guardar</span> 
         </button>
     </div>
-</section> 
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Cargando, por favor espere...</p>
+      </div>
+      
+</section>

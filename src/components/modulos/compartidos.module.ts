@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { BreadcrumbComponent } from '../paginas/full-layout/breadcrumb/breadcrumb.component';
+import { NotificationComponent } from './notifications/notification.component';
 
 
 @NgModule({
@@ -31,7 +33,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatTableModule, MatDatepickerModule, MatTabsModule, MatExpansionModule, MatMenuModule,
     MatPaginatorModule, MatProgressSpinnerModule, FormsModule, MatSlideToggleModule, MatAutocompleteModule,
     ReactiveFormsModule, MatTooltipModule, MatCheckboxModule, MatDialogModule,
-    MatGridListModule,
+    MatGridListModule,BreadcrumbComponent, NotificationComponent
   ],
   exports:[
     CommonModule, MatFormFieldModule, MatButtonModule, MatInputModule,
@@ -39,6 +41,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatTabsModule, MatExpansionModule, MatMenuModule, MatPaginatorModule,
     MatProgressSpinnerModule,  MatCardModule, FormsModule, MatSlideToggleModule, MatAutocompleteModule,
     ReactiveFormsModule, MatTooltipModule, MatCheckboxModule, MatDialogModule, MatGridListModule,
+    NotificationComponent
   ],
   providers:[
     { provide: MatPaginatorIntl, useValue: getEspPaginatorIntl() }

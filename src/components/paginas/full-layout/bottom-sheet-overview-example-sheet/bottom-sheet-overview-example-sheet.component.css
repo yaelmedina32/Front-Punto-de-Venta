@@ -1,0 +1,51 @@
+.menu-item {
+  background-color: white !important;
+  color: black !important;
+  font-size: 22px !important; 
+  padding: 40px;
+  margin: 0;
+  display: block;
+  text-decoration: none;
+  width: 100%;
+}
+
+.contenido-bottom-sheet mat-expansion-panel {
+  background-color: white !important;
+  
+}
+mat-expansion-panel-header {
+  height: 100px !important; /* Puedes ajustar el tamaño */
+}
+
+
+.panel {
+  background-color: white !important; 
+  color: black !important;          
+  border-radius: 5px; 
+  width: 100%;  
+  font-size: 24px;
+line-height: 40px;         
+}
+
+
+.sinestilo {
+  background-color: white !important;
+  color: black !important;
+  font-size: 22px !important;
+  border: none;  
+  margin: 0;
+  padding: 40px;
+  text-align: left; 
+  width: 100%;
+}
+
+
+.mat-bottom-sheet-container {
+  border-radius: 10%;
+}
+::ng-deep .mat-bottom-sheet-container {
+  background-color: white !important;
+  color: white !important;
+  border-radius: 20px 20px 0 0 !important;
+  padding: 0%;
+}

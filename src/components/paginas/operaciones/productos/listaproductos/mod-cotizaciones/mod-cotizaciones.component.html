@@ -1,0 +1,51 @@
+<section>
+  <button class="Prbtn" (click)="accionSegunTab()">Download</button>
+<h3 style="text-align: center; color: aliceblue; background-color: #21222D ; margin-top: 3px;">Historial de Cotizaciones</h3>
+
+<mat-card>
+  <mat-card-content>
+    <div class="datosOC">
+      <mat-table [dataSource]="dataSource" style="color: white;">
+        <ng-container matColumnDef="folioCotizacionId">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-form-field appearance="outline">
+                <mat-label> Folio Cotizacion</mat-label>
+                <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'folioCotizacionId')">
+            </mat-form-field> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.folioCotizacionId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreProducto">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-form-field appearance="outline">
+                <mat-label> Nombre Producto</mat-label>
+                <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'nombreProducto')">
+            </mat-form-field> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.nombreProducto}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="precio">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-form-field appearance="outline">
+                <mat-label>Precio</mat-label>
+                <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'precio')">
+            </mat-form-field> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.precio}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha</mat-label>
+                <input type="text" matInput  (keyup)="filtrarDatos($any($event.target).value, 'fecha')">
+            </mat-form-field> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.fecha}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
+      </mat-table>
+    </div>
+  </mat-card-content>
+</mat-card>
+</section>

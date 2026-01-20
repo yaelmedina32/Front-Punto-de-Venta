@@ -1,3 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 mat-header-cell{
+    color: white;
+}
+
+mat-table{
+    background-color: inherit;
+    border-radius: 10%;
+}
+
+
+.breadcrumb-item {
+    font-size: 1.1rem; 
+    font-weight: 500; 
+    color: #f8f4f4;
+    padding: 5px 10px; 
+  }
+
+  .breadcrumb-item:last-child {
+    font-size: 1.1rem; 
+    font-weight: 500; 
+    color: #f8f4f4;
+    padding: 5px 10px; 
+  }
+  .breadcrumb-item:last-child:hover {
+    color: #885959;
+  }
+  .breadcrumb {
+    justify-content: start;
+    margin-right: 2%;
+    padding: 0px !important; 
+    background: #171821 !important;
+    position: relative; 
+  }
+
+.mdc-list-item__primary-text {
     color: white;
 }

@@ -8,10 +8,10 @@
                     {{element.nombre}}
                 </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="modelo">
-                <mat-header-cell *matHeaderCellDef> Modelo del Producto </mat-header-cell>
+            <ng-container matColumnDef="preciocompra">
+                <mat-header-cell *matHeaderCellDef> Precio Compra </mat-header-cell>
                 <mat-cell *matCellDef="let element">
-                    {{element.modelo}}
+                    {{element.preciounitario | currency: 'USD'}}
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="precioventa">

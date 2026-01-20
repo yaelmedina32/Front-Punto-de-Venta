@@ -1,4 +1,4 @@
-  import { Component, OnInit, ViewChild } from '@angular/core';
+  import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { CompartidosModule } from '../../../../modulos/compartidos.module';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,7 +20,12 @@ import { SessionService } from '../../../../services/session.service';
 import { QueryList } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ViewChildren } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Renderer2 } from '@angular/core';
+import { saveAs } from 'file-saver';
+import * as ExcelJS from 'exceljs';
+import { map, Observable, startWith } from 'rxjs';
+import { start } from 'repl';
 type AOA = any[][];
 
 export enum ExcelInventario{
@@ -34,7 +39,7 @@ export enum ExcelInventario{
   roc = 7,
   dot = 8,
   letra = 9,
-  tipollanta = 10,
+  tipo = 10,
   costo = 11,
   precio = 12,
   pasillo = 13,
@@ -48,8 +53,10 @@ export interface Inventario{
   inventarioid : number;
   clave: string;
   nombreproducto: string;
+  nombrefiltro?: string;
   prouductoid: number;
   fechaalta: string;
+  total?: number;
   dot: number;
   ubicacion: string;
   ubicacionid: number;
@@ -60,11 +67,10 @@ export interface Inventario{
 } 
 
 @Component({
-  selector: 'app-lista-inventario',
-  standalone: true,
-  imports: [CompartidosModule, CurrencyPipe, MatSortModule, MatIconModule, MatSlideToggleModule],
-  templateUrl: './lista-inventario.component.html',
-  styleUrl: './lista-inventario.component.css'
+    selector: 'app-lista-inventario',
+    imports: [CompartidosModule, CurrencyPipe, MatSortModule, MatIconModule, MatSlideToggleModule],
+    templateUrl: './lista-inventario.component.html',
+    styleUrl: './lista-inventario.component.css'
 })
 export class ListaInventarioComponent implements OnInit{
   @ViewChildren('mostrarAlta') elementosBotones: QueryList<ElementRef>;
@@ -75,12 +81,14 @@ export class ListaInventarioComponent implements OnInit{
   usuarioId = 0;
   dataSource = new MatTableDataSource<any>();
   dataSourceAuxiliar: Array<any> = [];
+  almacenId: number = 0;
   @ViewChild(MatPaginator)  set paginator(value: MatPaginator) { this.dataSource.paginator = value; }
-  columnasDesplegadas = ['clave','fecha', 'dot', 'ubicacion', 'costo', 'venta', 'slideToggle','ordencompra'];
+  columnasDesplegadas = ['clave', 'marca','fecha', 'dot', 'ubicacion', 'costo', 'venta', 'slideToggle','ordencompra'];
   resumen = new MatTableDataSource();
   resumenDesplegadas = ['nombre', 'cantidad', 'costopromedio', 'ventapromedio'];
   productoSeleccionado: any = {};
   permitirVariosDOTS = false;
+  ubicacionACT = false;
   permitirPrecioVenta = false;
   precioVenta = new FormControl('');
   marcarMermas = false;
@@ -88,37 +96,66 @@ export class ListaInventarioComponent implements OnInit{
   allDotsSeleccionados = false;
   dot = new FormControl();
   idsSeleccionados: number[] = [];
+  actInventario:boolean =false;
   @ViewChild(MatSort) sort: MatSort;
   isChecked = true;
   direcciones = ['asc', 'desc', ''];
   clicksDirecciones = 0;
-  constructor(private router: Router, private api: ApiService, private dialog: MatDialog, private session: SessionService, private renderer: Renderer2){
+  ubicaciones: Array<any> = [];
+  ubicacion = new FormControl();
+  ubicacionesFiltradas: Observable<any>;
+
+  constructor(@Inject(Router) public router: Router, private api: ApiService, private dialog: MatDialog, private session: SessionService, private renderer: Renderer2){
     if (typeof window !== 'undefined') {
       this.usuarioId = parseInt(sessionStorage.getItem('usuarioid') || '0');}
   }
   ngAfterViewInit(): void {
     this.arregloElementos = this.elementosBotones.toArray();
-    console.log('arrreglo elementos botones',this.arregloElementos)
     this.obtenerPermisoBotones();}
   ngOnInit(): void {
+    this.almacenId = parseInt(localStorage.getItem('almacenId') || '0');
     this.session.validarSesion(this.menuId);
     this.obtenerInventario();
     this.dataSource.paginator = this.paginator;
     this.filtroNombre.setValue('');
+    this.obtenerUbicaciones();
   }
 
+  _filter(value: string): any {
+    const filterValue = value.toLowerCase();
+    return this.ubicaciones.filter(option => option.ubicacionfiltro.toLowerCase().includes(filterValue));
+  }
+
+  obtenerUbicaciones(){
+    this.api.consultaDatos('operaciones/ubicaciones/lista/formateadas/' + this.almacenId).subscribe((ubicaciones: Array<any>) => {
+      if(ubicaciones.length == 0){
+        swal("Error en ubicaciones", "No hay ubicaciones para el almacén seleccionado", "error");
+        return;
+      }
+      this.ubicaciones = ubicaciones;
+      this.ubicacionesFiltradas = this.ubicacion.valueChanges.pipe(
+        startWith(''),
+        map((value: any) => this._filter(value))
+      );
+    })
+  }
+
+  onToggle(event: MatSlideToggleChange) {
+    if(event.checked){
+      this.actInventario  = true;// SE VA A ACTUALIZAR INVENTARIO
+    } else{
+      this.actInventario = false;//SE VA A AGREGAR EL INVENTARIO POR PRIMERA VEZ
+    }
+  }
 
   leerExcel(event: any){
     const archivo = event.target.files[0];
     const reader = new FileReader();
-    console.log(archivo);
     reader.onload = (e: any) => {
-      console.log(e);
       const datos: string = e.target.result;
       const libro = XLSX.read(datos, {type: 'binary'});
       const hojaExcel = libro.Sheets[libro.SheetNames[0]];
       const datosExcel = <AOA>(XLSX.utils.sheet_to_json(hojaExcel, {header: 1}));
-      console.log(datosExcel);
       const encabezado = ['# Contenedor', 'Marca', 'Modelo', 'Ancho', 'Alto', 'Rin', 'Indice Carga', 'R o C', 'DOT', 'Letra Velocidad', 'Tipo de Llanta'
         , 'Costo', 'Precio Venta', 'Pasillo', 'Anaquel', 'Nivel', 'Dañada', 'Orden Compra'];
       let archivoIncorrecto = false;
@@ -160,7 +197,6 @@ export class ListaInventarioComponent implements OnInit{
               break;
             };
             if(row[ExcelInventario.roc].toUpperCase() != 'R' && row[ExcelInventario.roc].toUpperCase() != 'C' ){
-              console.log(row[ExcelInventario.roc]);
               archivoIncorrecto = true;
               motivoIncorrecto = "R o C contiene letras incorrectas";
               break;
@@ -177,17 +213,19 @@ export class ListaInventarioComponent implements OnInit{
                 indicecarga: !row[ExcelInventario.indicecarga] ? '' : row[ExcelInventario.indicecarga],
                 letra: row[ExcelInventario.letra] ? row[ExcelInventario.letra].toUpperCase() : '',
                 marca: row[ExcelInventario.marca],
+                tipo: row[ExcelInventario.tipo] ? row[ExcelInventario.tipo].toUpperCase() : '',
               }
             );
             arregloInventario.push(
               {
-                modelo: row[ExcelInventario.modelo],
+                modelo: !row[ExcelInventario.modelo] ? '' : row[ExcelInventario.modelo],
                 ancho: row[ExcelInventario.ancho],
                 alto: !row[ExcelInventario.alto] ? '' : row[ExcelInventario.alto],
                 rin: row[ExcelInventario.rin],
                 roc: row[ExcelInventario.roc].toUpperCase(),
                 letra: row[ExcelInventario.letra] ? row[ExcelInventario.letra].toUpperCase() : '',
                 marca: row[ExcelInventario.marca],
+                tipo:row[ExcelInventario.tipo] ? row[ExcelInventario.tipo].toUpperCase() : '',
                 dot: row[ExcelInventario.dot],
                 pasillo: row[ExcelInventario.pasillo],
                 anaquel: row[ExcelInventario.anaquel],
@@ -197,6 +235,7 @@ export class ListaInventarioComponent implements OnInit{
                 costo: !row[ExcelInventario.costo] ? '0' : row[ExcelInventario.costo],
                 venta: row[ExcelInventario.precio],
                 ordencompraid: row[ExcelInventario.ordencompra],
+                almacenid: this.almacenId
               }
             );
           }
@@ -207,7 +246,6 @@ export class ListaInventarioComponent implements OnInit{
         return;
       }
       this.api.consultaDatosPost('administracion/ordenescompra', ordenesCompraSinRepetir).subscribe((ordenesInsertadas) => {
-        console.log(ordenesInsertadas);
         let ordenesCompraNoInsertadas = [...ordenesCompraSinRepetir];
         let error = false;
         //USO UN AUXILIAR PORQUE VA A SER EL ARREGLO QUE VOY A USAR PARA MOSTRARLE AL USUARIO CUALES SON LAS ORDENES DE COMPRA QUE FALTAN 
@@ -238,7 +276,6 @@ export class ListaInventarioComponent implements OnInit{
             error = true;
             break;
           }
-          console.log(datosExcel.filter(ele => ele[ExcelInventario.ordencompra] == 3));
           const costoTotalOC = datosExcel.filter(ele => ele[ExcelInventario.ordencompra] == ordenesCompraSinRepetir[j])
             .reduce((acum, actual) => acum += actual[ExcelInventario.costo], 0);
           const costoRealOC = ordenesInsertadas.find((ele: any) => ele.ordencompraid == ordenesCompraSinRepetir[j]).importetotal;
@@ -303,14 +340,18 @@ export class ListaInventarioComponent implements OnInit{
     }
     reader.readAsArrayBuffer(archivo);
   }
+  
+  permisoDOT: boolean = false;
+  permisoPrecioVenta: boolean = false;
   obtenerPermisoBotones() {
     this.api.consultaDatos('configuraciones/permisoBoton/' + this.usuarioId).subscribe({
       next: (permisos: any[]) => {
       const menu = permisos.map(permisos=> permisos.menuId);
       this.menu = menu;
-      console.log(this.menu)
-        console.log('Datos extraidos', permisos);
         this.permisosBotones = permisos;
+        console.log(this.permisosBotones.find(ele => ele.botonId == 46))
+        this.permisoDOT = this.permisosBotones.some(ele => ele.botonId == 46);
+        this.permisoPrecioVenta = this.permisosBotones.some(ele => ele.botonId == 47);
         
         this.compararPermisosConBotones();
       },
@@ -324,12 +365,9 @@ export class ListaInventarioComponent implements OnInit{
       
       const botonId = elemento.nativeElement.id; 
       const permisoEncontrado = this.permisosBotones.find(permiso => permiso.nombre === botonId);
-      console.log(permisoEncontrado);
       if (permisoEncontrado) {
-        console.log(`Permiso encontrado para el botón con id: ${botonId}`);
         this.renderer.setProperty(elemento.nativeElement, 'disabled', false); 
       } else {
-        console.log(`No hay permiso para el botón con id: ${botonId}`);
         this.renderer.setStyle(elemento.nativeElement, 'display', 'none'); 
       }
     });
@@ -337,15 +375,20 @@ export class ListaInventarioComponent implements OnInit{
   aplicarConfiguracionDOTS(){
     swal({title: 'Aplicar DOTS a inventario', text: 'Para que se apliquen los cambios debe guardar. ¿Desea continuar?', buttons:['No','Si'],icon: "warning"}).then((response) => {
       if(response){
-        this.dataSource.data.forEach((element: any) => {
-          element.dot = element.seleccionado == 1 ? this.dot.value : "";
+        //EN ESTA PARTE LO QUE HAGO ES FILTRAR LOS PRODUCTOS SELECCIONADOS, Y LUEGO ASIGNARLES EL DOT DEL INPUT
+        this.dataSource.data.filter(ele => ele.seleccionado).map((element: any) => {
+          element.dot = this.dot.value;
         });
-        this.dataSource.data.map((element: any) => element.seleccionado = 0);
+        //PARA LUEGO, DESELECCIONARLOS
+        this.dataSource.data.map((element: any) => element.seleccionado = false);
       }
     })
   }
 
   guardarCambios(){
+    this.dataSource.data.filter(ele => ele.nuevo !== 0).forEach(element => {
+      element.dot = element.dot.toString().padStart(4, '0')
+    })
     if(this.permitirPrecioVenta && this.precioVenta.value == ''){
       swal("Error en precio de venta", "Coloque el precio de venta para continuar", "error");
       return;
@@ -353,8 +396,8 @@ export class ListaInventarioComponent implements OnInit{
     swal({title: 'Guardar Cambios', text: '¿Desea Guardar los cambios del inventario?', buttons: ['No', 'Si'], icon: "warning"}).then((response) => {
       if(response){  
         this.permitirPrecioVenta ? this.dataSource.data.filter(ele => ele.seleccionado).map(ele => ele.precioventa = this.precioVenta.value) : null;
-        const elementosFiltrados = this.dataSource.data.filter((ele: any) => ele.dot != '' || ele.merma || ele.precioventa > 0);
-        console.log(elementosFiltrados);
+        this.ubicacionACT ? this.dataSource.data.filter(ele => ele.seleccionado).map(ele => ele.ubicacionid = this.ubicaciones.find(ele => ele.ubicacion == this.ubicacion.value).ubicacionid) : null;
+        const elementosFiltrados = this.dataSource.data.filter((ele: any) => ele.dot != '' || ele.merma || ele.precioventa > 0 || ele.ubicacionid);
         this.api.modificarDatos('operaciones/inventario', elementosFiltrados ).subscribe((response) => { 
           swal("Datos Insertados", "Se actualizó el inventario correctamente", "success");
           this.obtenerInventario();
@@ -391,13 +434,23 @@ export class ListaInventarioComponent implements OnInit{
     this.dialog.open(ModPreciosComponent);
   }
 
-  toggleSeleccion() {
-    if (this.permitirVariosDOTS || this.permitirPrecioVenta) {
-        if (!this.columnasDesplegadas.includes('seleccionarDOTS')) {
-            this.columnasDesplegadas.unshift('seleccionarDOTS');
-        }
+  toggleSeleccion(toggled: string) {
+    if (this.permitirVariosDOTS || this.permitirPrecioVenta || this.ubicacionACT) {
+      if (!this.columnasDesplegadas.includes('seleccionarDOTS')) {
+          this.columnasDesplegadas.unshift('seleccionarDOTS');
+      }
     } else {
         this.columnasDesplegadas = this.columnasDesplegadas.filter(col => col !== 'seleccionarDOTS');
+    }
+    if(toggled == 'dot'){
+      this.permitirPrecioVenta = false;
+      this.ubicacionACT = false;
+    } else if (toggled == 'precio'){
+      this.permitirVariosDOTS = false;
+      this.ubicacionACT = false;
+    }else{
+      this.permitirPrecioVenta = false;
+      this.permitirVariosDOTS = false;
     }
 }
 
@@ -419,9 +472,9 @@ export class ListaInventarioComponent implements OnInit{
   }
 
 
-  editarDOT(){
-    this.dataSource.data.map((ele: any) => ele.nuevo = ele.nuevo == 1 ? 0 : 1);
-  }
+  // editarDOT(element: any){
+  //   element.nuevo = 1
+  // }
 
   validarInput(inventarioId: number){
     const indice = this.dataSource.data.findIndex((ele: any) => ele.inventarioid == inventarioId); 
@@ -449,8 +502,8 @@ export class ListaInventarioComponent implements OnInit{
   }
 
   obtenerInventario(){
-    this.api.consultaDatos('operaciones/inventario/0').subscribe((inventario: any) => {
-      console.log(inventario);
+    this.api.consultaDatos('operaciones/inventario/0/' + this.almacenId).subscribe((inventario: any) => {
+      console.log(inventario[0])
       this.dataSource = new MatTableDataSource(inventario);
       this.dataSource.data.map((ele: any) => {
         ele.seleccionado = false;
@@ -499,6 +552,75 @@ export class ListaInventarioComponent implements OnInit{
     this.router.navigate([`/operaciones/inventario/alta`]);
   }
 
+  plantillaInventario(){
+    this.api.consultaDatos('operaciones/inventarioExcel').subscribe({
+      next:(datos)=>{
+        const  workbook  =  new  ExcelJS . Workbook ( ) ;
+        const  sheet  =  workbook.addWorksheet ( 'Plantilla Inventario' ) ;
+        const headers = ['#Contenedor', 'Marca','Modelo', 'Ancho', 'Alto', 'Rin', 'IndiceCarga', 'R o C', 'DOT', 'LetraVelocidad', 'Tipo de Llanta', 'Costo', 'Precio Venta', 'Pasillo', 'Anaquel', 'Nivel','Dañada', 'Orden Compra'];
+         sheet.addRow(headers)
+          const celda= sheet.getRow(1);
+        celda.font= {size :10, bold:true}
+        celda.alignment= {horizontal: "center", wrapText:true}
+
+        for(let i= 1;i<=19;i++){
+          sheet.getColumn(i).width=23
+        }
+        const registros = datos[0] ; 
+        registros.forEach((dato: any) => {
+        sheet.addRow([
+          dato.contenedor || '',
+          dato.marca || '',
+          dato.modelo || '',
+          dato.ancho || '',
+          dato.alto || '',
+          dato.rin || '',
+          dato.indiceCarga || '',
+          dato.roc || '',
+          dato.dot || '',
+          dato.letraVelocidadId || '',
+          dato.tipo || '',
+          dato.costo || 0,
+          dato.precioVenta || 0,
+          dato.pasillo || '',
+          dato.anaquel || '',
+          dato.nivel || '',
+          dato.dañada || '',
+          dato.ordenCompraId || ''
+        ]);
+      });
+      sheet.eachRow((row) => {
+        row.height = 35; 
+      });
+      
+      for (let i = 1; i <= registros.length + 1; i++) { // Desde la fila 1 (encabezado) hasta la última fila de datos
+        const row = sheet.getRow(i);
+        row.eachCell((cell, colNumber) => {
+          if (colNumber <= headers.length) { // Solo las columnas ocupadas por la tabla
+            cell.border = {
+              top: { style: 'thin' },
+              left: { style: 'thin' },
+              bottom: { style: 'thin' },
+              right: { style: 'thin' },
+            };
+          }
+        });
+      }
+
+
+  workbook.xlsx.writeBuffer().then((buffer:any) => {
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'Plantilla_Inventario.xlsx');
+  });
+},
+error: (err) => {
+},
+});
+     
+  }
+
   bufferCambios: any[] = [];
 
   filtrarDatos(texto: string, objeto: string){
@@ -516,7 +638,7 @@ export class ListaInventarioComponent implements OnInit{
           //EL CONTADOR LO USO PARA VERIFICAR EL TOTAL DE CAMBIOS HECHOS, Y HACER QUE SI SE ELIMINA EL PRIMER FILTRO
           //TE SIGA RESPETANDO LOS SIGUIENTES
           this.bufferCambios.forEach( element=> {
-              if(item[element.objeto].toString().trim().toLowerCase().includes(element.valor.toLowerCase())){
+              if(item[element.objeto] && item[element.objeto].toString().trim().toLowerCase().includes(element.valor.toLowerCase())){
                   contador++;
               }
           })

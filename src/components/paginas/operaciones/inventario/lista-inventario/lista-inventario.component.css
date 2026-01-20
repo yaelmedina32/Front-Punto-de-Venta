@@ -1,16 +1,305 @@
+mat-card{
+    background-color: #21222D;
+    max-height: 650px;
+}
 mat-card-content{
     max-height: 90vh;
+    overflow-x: none;
+    overflow-y: auto;
+}
+mat-table{
+    background-color: #21222D;
+}
+
+@media screen and (max-width:1370px) {
+    mat-card{
+     
+        width: 170%;
+        margin-top: 1%;
+        margin-left: 9%;
+        height: 80%;
+        overflow-x: none;
+    }
 }
 
 mat-table{
-    max-height: 60vh;
-    overflow-y: auto;
+    max-height: 70vh;
+    margin-top: 1%;
+}
+.editarDots{
+    margin-right: 10%;
+    height: 80%;
+}
+.parteSecundaria{
+    gap: 90px;
+    display: flex;
+    width: 40%;
+    margin-left: 2%;
+}
+.parteSecundaria2{
+    gap: 120px;
+    display: flex;
+}
+.parteCentral{
+    display: flex;
+    width: 50%;
+    gap: 90px;
+    margin-left: 8%;
+}
+.parteSecundaria3{
+    gap: 100px;
+    display: flex
+}
+.partePrincipal{
+    display: flex;
+    margin-top: 1%;
+}
+.actualizarExcel{
+    width: 70%;
+
+}
+@media screen and (max-width:1370px) {
+    .editarDots{
+        margin-right: 5%;
+        width: 50%;
+    }
+.partePrincipal{
+    display: contents;
+}
+.parteSecundaria{
+display: flex;
+gap: 5px;
+margin-top: 1%;
+height: 10%;
+justify-content: center;
+width: 100%;
+border-color: blue;
+}
+.actualizarExcel{
+    width: 50%;
+
+}
+.parteSecundaria2{
+display: flex;
+gap: 25px;
+margin-top: 2%;
+width: 90%;
+height: 10%;
+border-color: red;
+justify-content: center;
+align-items: center;
+margin-left: 5%;
+}
+.parteCentral{
+    display: flex;
+    width: 90%;
+    height: 10%;
+    border-color: red;
+    gap: 20px;
+    align-items: center;
+    margin-right: 10px;
+}
+.parteSecundaria3{
+    display: flex;
+    width: 115%;
+    height: 10%;
+    border-color: red;
+    gap: 4px;
+    align-items: center;
+    margin-right: 10px;
+    }
+input{
+    padding: 0%;
+    margin-left: 0%;
+    width: 90%;
 }
 
+
+}
+@media (min-width: 1px) and (max-width: 750px) {
+    .botonesinf{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 1%;
+        width: 100%;
+        overflow-x: auto;
+    }
+        .botoninf{
+            width: 25%;
+            height: 55%;
+            margin-right: 2%;
+        
+    }
+}
+@media (min-width: 751px) and (max-width: 1370px) {
+    .botonesinf{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 1%;
+        width: 100%;
+        overflow-x: auto;
+    }
+        .botoninf{
+            width: 25%;
+            height: 100%;
+            margin-right: 2%;
+        
+    }
+}
+@media screen and (max-width:1370px) {
+    .datosOC{
+        width: 70vw;
+        overflow-x: auto;
+    }
+    mat-table{
+        width: 400%;
+        overflow-x: none;
+    }
+}
+    
+ 
 mat-card{
     width: 80vw;
+    height: 90vh;
 }
 
 #subirExcel{
     color: aliceblue;
+
+}
+.botonesinf{
+display: flex;
+    justify-content: space-around;
+    margin-top: 1%;
+    position: absolute;
+    width: 100%;
+}
+.paginator {
+    margin-top: 65px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+::ng-deep .mat-mdc-paginator-container {
+background-color: #21222D !important;
+}
+
+
+::ng-deep  .mdc-switch__track::before, .mdc-switch__track::after {
+    border: none !important;}
+
+  ::ng-deep  .mdc-switch__track::before {
+background-color: #171821 !important;
+  }
+  ::ng-deep   .mdc-switch__icons {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: white !important;
+    border-radius: 20px    !important;
+}
+
+::ng-deep .mdc-switch__track::after {
+    transform: translateX(-100%);
+    background: #a6a7a988 !important;
+}
+
+.Prbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+    font-size: 0.7rem;
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+
+.Lpbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f9d44058; 
+    border: 1px solid #fad028;;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+    font-size: 0.7rem;
+}
+.colorYellow{
+    color: #fad028;
+}
+
+.Grbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.colorGreen{
+    color: #82f06cd6;
+}
+
+
+::ng-deep .parteSecundaria mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    border-radius: 12px;
+    padding: 5px;
+    border: none;
+    width: 8vw;
+  }
+
+  ::ng-deep .estiloForm mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    border-radius: 12px;
+    padding: 5px;
+    border: none;
+    width: 10vw;
+  }
+
+  ::ng-deep .estiloOc mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    border-radius: 12px;
+    padding: 5px;
+    border: none;
+    width: 6vw;
+  }
+  input[type="file"] {
+    display: none; 
+}
+
+.boton-personalizado {
+    display: inline-block;
+    background-color: #424454; 
+    color: white; 
+    padding: 5px 40px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.boton-personalizado:hover {
+    background-color: #171821; 
+}
+
+.datosOC{
+    height: 50vh;
+    overflow-y: auto;
+}
+
+.dotCell:hover{
+    background-color: #171821;
+    cursor: pointer;
 }

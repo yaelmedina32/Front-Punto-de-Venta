@@ -1,81 +1,106 @@
+
 * {
     box-sizing: border-box;
+    overflow-y:unset;
     }
     
     *:focus {
       outline: none;
     }
+    .logo {
+  
+      top: 10px; 
+      left: 10px; 
+      width: 50px; 
+      height: auto; 
+  }
     #body {
       font-family: Arial;
-      padding: 50px;
+
       display: flex;
-      justify-content: center;
+      margin-top: 80px;
+     justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 100%;
       /* background-image: url('/distribuible_dctires/llantas.jpg'); */
-      background-image: url('/llantas.jpg');
+      background-color: #171821;
       background-repeat: no-repeat;
       background-size: cover;
+     
     }
     img{
       border-radius: 0px 50px 30px 0px;
     }
+    
     .login {
-      margin: 20px auto;
-      width: 50vw;
-      display: flex;
-      justify-content: center;
-    }
+      width: 32vw;
+      height: 78vh;  
+      margin-left: 8vw;
+      }
+
     .login-screen {
-      background-color: #FFF;
+      background-color: #21222D;
       padding: 20px;
-      border-radius: 50px 0px 0px 30px;
+      border-radius: 20px 20px 20px 20px;
+      width: 100%;
+      justify-content: start;
+
     }
     
     .app-title {
-      text-align: center;
+      justify-content: end;
       color: #777;
+      margin-bottom: 4%;
+     
     }
     
     .login-form {
-      text-align: center;
+      text-align: start;
     }
     .control-group {
-      margin-bottom: 10px;
+      margin-bottom: 30px;
+    }
+
+    i{
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    form{
+      max-height: 50px;
+    }
+    .login-field{
+      background-color: #171821;
+      width: 100%;
+      border: #ffffff51 solid 1px;
+      padding: 14px;
+      color: #ffffff;
     }
     
-    input {
-      text-align: center;
+    input, form{
+      text-align:start;
       background-color: #ECF0F1;
       border: 2px solid transparent;
       border-radius: 10px;
       font-size: 16px;
       font-weight: 200;
-      padding: 10px 0;
-      width: 250px;
-      transition: border .5s;
+      padding: 11px 0;
+      width: 95%;
+      transition: .5s;
     }
     
-    input:focus {
+    .focus{
       border: 2px solid #3498DB;
       box-shadow: none;
     }
     
     .btn {
-      border: 2px solid transparent;
-      background: #1f2427;
-      color: #ffffff;
-      font-size: 16px;
-      line-height: 25px;
-      padding: 10px 0;
-      text-decoration: none;
-      text-shadow: none;
-      border-radius: 10px;
-      box-shadow: none;
-      transition: 0.25s;
-      display: block;
-      width: 250px;
-      margin: 0 auto;
+      background-color: #FFAF25; 
+      color: #171821;
+      width: 100%;
+      border: #171821 solid 1px;
+      padding: 10px;
+      margin-top: 15px;
     }
     
     .btn:hover {
@@ -87,4 +112,49 @@
       color: #444;
       display: block;
       margin-top: 12px;
+    
+    }
+    .fondo{
+      justify-content: start;
+      width: 100%;
+    }
+    
+    @media (min-width: 1px) and (max-width: 1370px) {
+      .OtrasPantallas{
+      display: none;
+      }  
+      .login {
+        width: 50vw;
+        height: 70vh;  
+        margin-left: 25vw;
+        }
+        .login-screen {
+          background-color: #21222D;
+          padding: 20px;
+          border-radius: 20px 20px 20px 20px;
+          width: 100%;
+          justify-content: start;
+          height: 60%;
+          margin-top: 35%;
+        }
+
+
+        #body {
+          font-family: Arial;
+          display: flex;
+          margin-top: 100px;
+         justify-content: center;
+          align-items: center;
+          height: 100%;
+          /* background-image: url('/distribuible_dctires/llantas.jpg'); */
+          background-color: #171821;
+          background-repeat: no-repeat;
+          background-size: cover;
+         
+        }
+        .fondo{
+          justify-content: start;
+          width: 100%;
+          height: 100%;
+        }
     }

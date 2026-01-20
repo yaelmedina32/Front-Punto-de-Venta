@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, inject, ElementRef, ViewChild, OnInit, AfterViewInit, ViewChildren, QueryList, Query, Inject, HostListener, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CompartidosModule } from '../../modulos/compartidos.module';
 import { Renderer2 } from '@angular/core';
@@ -6,6 +6,19 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModTurnoComponent } from './mod-turno/mod-turno.component';
+import { ModListadoComponent } from '../administracion/mod-listado/mod-listado.component';
+import { ModDevolucionesConsultaComponent } from '../operaciones/ventas/modales/mod-devoluciones-consulta/mod-devoluciones-consulta.component';
+import { ModDetallespagoComponent } from '../operaciones/ventas/modales/mod-detallespago/detallespago.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { AltaletrasComponent } from '../operaciones/productos/altaletras/altaletras/altaletras.component';
+import { ModCategoriasComponent } from '../operaciones/productos/listaproductos/mod-categorias/mod-categorias.component';
+import { ModServiciosComponent } from '../operaciones/productos/listaproductos/mod-servicios/mod-servicios.component';
+import { MatBottomSheet,MatBottomSheetModule,} from '@angular/material/bottom-sheet';
+import { BottomSheetOverviewExampleSheetComponent } from './bottom-sheet-overview-example-sheet/bottom-sheet-overview-example-sheet.component';
+import { MouseEventService } from '../../services/MouseEventService.service';
+import { isPlatformBrowser } from '@angular/common';
+import { NotificationComponent } from '../../modulos/notifications/notification.component';
 
 export class Sucursal{
   sucursalId: number;
@@ -16,19 +29,32 @@ export class Sucursal{
 }
 
 @Component({
-  selector: 'app-full-layout',
-  standalone: true,
-  imports: [RouterOutlet, CompartidosModule, RouterLink],
-  templateUrl: './full-layout.component.html',
-  styleUrl: './full-layout.component.css'
+    selector: 'app-full-layout',
+    templateUrl: './full-layout.component.html',
+    standalone: true,
+    imports: [CompartidosModule, RouterOutlet, RouterLink,MatMenuModule,MatButtonModule,MatButtonModule, MatBottomSheetModule, NotificationComponent],
+    styleUrl: './full-layout.component.css'
 })
 export class FullLayoutComponent implements OnInit, AfterViewInit{
+  private _bottomSheet = inject(MatBottomSheet);
   @ViewChildren('divDinamico') element: QueryList<ElementRef>;
+  @ViewChildren('menuPermiso') menuPermiso: QueryList<any>;
   @ViewChild('contenido') contenido: ElementRef;
   @ViewChild('menuCompras') menuCompras: ElementRef;
 
+  @ViewChild('centrar') centrar!: ElementRef;
+  @ViewChild('navegacion') navegacion!: ElementRef;
+  @ViewChild('centrarUl') centrarUl!: ElementRef;
+
+  @ViewChildren('ocultaLetra') ocultaLetra: QueryList<any>;
+  @ViewChildren('Grande') Grande: QueryList<any>;
+  @ViewChild('divUl') divUl :ElementRef;
   @ViewChild('divAdmin') divAdmin: ElementRef;
-  @ViewChild('btnModulo') btnAdmin: ElementRef;
+  @ViewChild('divOperaciones') divOperaciones: ElementRef;
+  @ViewChild('divCatalo') divCatalo: ElementRef;
+  @ViewChild('divconf') divconf: ElementRef;
+  @ViewChild('btnModulo') btnAdmin: any;
+  permisosMenu: Array<any> = []; 
   title = 'DCTires';
   sideBar = true;
   usuarioId = 0
@@ -41,51 +67,203 @@ export class FullLayoutComponent implements OnInit, AfterViewInit{
   almacenes: Array<any> = [];
   permisos: Array<any> = [];
   turnoAbierto = false;
-  clickAdmin = false;
-
-  constructor(private renderer: Renderer2, private router: Router, private api: ApiService, private dialog: MatDialog){
-    if (typeof window !== 'undefined') {
+  clickAdmin = true;
+  activeMenu: string = '';
+  screenWidth: number;
+  constructor(private renderer: Renderer2, @Inject(Router) public router: Router, private api: ApiService, private dialog: MatDialog, private mouseEventService: MouseEventService, @Inject(PLATFORM_ID) private platformId: Object){
+    if (isPlatformBrowser(this.platformId)) {
       this.sucursalId = parseInt(localStorage.getItem('sucursalId') || '0');
       this.almacenId = parseInt(localStorage.getItem('almacenId') || '0');
       this.usuarioId = parseInt(sessionStorage.getItem('usuarioid') || '0');
       this.nombreUsuario = sessionStorage.getItem("nombreusuario") || '';
-  }
+    }
   }
 
   ngAfterViewInit(): void {
-    if(this.divAdmin){
-      console.log(this.divAdmin);
+    if(this.usuarioId && this.usuarioId !== 0){
+      if(this.divAdmin){
+      }
+      if(this.btnAdmin){
+      }
+      if(this.element){
+        this.comprobarTurno();
+        setTimeout(() => {
+          this.filtrarPermisos();
+        }, 500);
+      }
+      if(this.menuPermiso){
+        
+      const datosAEnviar = {
+        usuarioid: this.usuarioId
+      }
+      this.api.consultaDatosPost('configuraciones/permisos', datosAEnviar).subscribe((permisos: Array<any>) => {
+        const stringPermiso = permisos.reduce((acum, actual) => acum += (actual.menuId + ','), "");
+        this.permisosMenu = stringPermiso.substring(0, stringPermiso.length - 1).split(',') || [];
+        this.menuPermiso.toArray().forEach((element: any) => {
+          if(!this.permisosMenu.some(ele => ele == element._elementRef.nativeElement.id)){
+            this.renderer.setStyle(element._elementRef.nativeElement, 'display', 'none');
+          }
+        })
+      })
+      }
+      this.ocultarnav(this.screenWidth)
     }
-    if(this.btnAdmin){
-      console.log(this.btnAdmin);
+  }
+  
+  
+
+  onMouseEnter(event:MouseEvent):void{
+  //   setTimeout(() => {
+  //     this.renderer.addClass(this.contenido.nativeElement,'contentMediomax')
+  //     this.renderer.addClass(this.divUl.nativeElement,'navegacion')
+  //     this.renderer.addClass(this.centrarUl.nativeElement,'mb-auto')
+  //     this.ocultaLetra.toArray().forEach((element:any)=>{
+  //       this.renderer.addClass(element.nativeElement,'spanItemAgregar')
+  //     })
+  //     this.Grande.toArray().forEach((element:any)=>{
+  //       this.renderer.addClass(element.nativeElement,'iconomin')
+  //     })
+  //     this.Grande.toArray().forEach((element:any)=>{
+  //       this.renderer.removeClass(element.nativeElement,'icono')
+  //     })
+  //     this.ocultaLetra.toArray().forEach((element:any)=>{
+  //       this.renderer.removeClass(element.nativeElement,'spanItem')
+  //     })
+  //     this.renderer.removeClass(this.centrarUl.nativeElement,'mb-autoGr')
+  //     this.renderer.removeClass(this.contenido.nativeElement,'contentMedio')
+  //     this.renderer.removeClass(this.divUl.nativeElement,'navegacionmin')
+  //     this.mouseEventService.emitirMouseEnter(true);
+  // }, 150);
+ 
+  }
+  onMouseLeave(event:MouseEvent):void{
+    setTimeout(() => {
+      this.renderer.addClass(this.centrarUl.nativeElement,'mb-autoGr')
+    this.renderer.addClass(this.divUl.nativeElement,'navegacionmin');
+    this.renderer.addClass(this.contenido.nativeElement,'contentMedio')
+    this.ocultaLetra.toArray().forEach((element:any)=>{
+      this.renderer.addClass(element.nativeElement,'spanItem')
+    });
+    this.Grande.toArray().forEach((element:any)=>{
+      this.renderer.addClass(element.nativeElement,'icono')
+    });
+    this.renderer.removeClass(this.divUl.nativeElement,'navegacion');
+    this.ocultaLetra.toArray().forEach((element:any)=>{
+      this.renderer.removeClass(element.nativeElement,'spanItemAgregar')
+    });
+    this.Grande.toArray().forEach((element:any)=>{
+      this.renderer.removeClass(element.nativeElement,'iconomin')
+    });
+    this.renderer.removeClass(this.centrarUl.nativeElement,'mb-auto')
+    this.renderer.removeClass(this.contenido.nativeElement,'contentMediomax');
+    // this.renderer.setStyle(this.divAdmin.nativeElement, 'display', 'none');
+    // this.renderer.setStyle(this.divCatalo.nativeElement, 'display', 'none');
+    // this.renderer.setStyle(this.divconf.nativeElement, 'display', 'none');
+    // this.renderer.setStyle(this.divOperaciones.nativeElement, 'display', 'none');
+    this.mouseEventService.emitirMouseEnter(false);
+  },150);
+  }
+  abrirAltaClientes(){
+    this.dialog.open(ModListadoComponent,
+      {
+        maxWidth: '100vW',
+        width: '90%'
+      }
+    )
+  }
+  ocultarnav(width:number){
+    if(width<= 1380 ) {
+      this.renderer.addClass(this.navegacion.nativeElement, 'hide-important');
+      this.renderer.removeClass(this.centrar.nativeElement,'d-flex');
+      this.renderer.addClass(this.contenido.nativeElement,'contentmedio-important')
+    } else {
+      this.renderer.removeClass(this.navegacion.nativeElement, 'hide-important');
+      this.renderer.addClass(this.centrar.nativeElement,'d-flex');
+      this.renderer.removeClass(this.contenido.nativeElement, 'contentmedio-important');
     }
-    if(this.element){
-      this.comprobarTurno();
-      setTimeout(() => {
-        this.filtrarPermisos();
-      }, 500);
-    }
+
   }
 
   abrirMenu(menu: string){
-    if(menu == 'admin'){
-      this.renderer.setStyle(this.divAdmin.nativeElement, 'display', !this.clickAdmin ? 'flex' : 'none');
-      !this.clickAdmin ? this.renderer.setStyle(this.divAdmin.nativeElement, 'justify-content', 'end') : null;
-      this.renderer.setStyle(this.divAdmin.nativeElement, 'margin-bottom', !this.clickAdmin ? '20%' : '0');
-      this.renderer.setStyle(this.btnAdmin.nativeElement, 'margin-bottom', this.clickAdmin ? '0' : '20%');
-      this.clickAdmin = !this.clickAdmin;
+    this.activeMenu = this.activeMenu === menu ? '' : menu;
+  }
+
+  abrirConsultaVentas(){
+    this.router.navigate(['/operaciones/historial']);
+  }
+
+  abrirDevoluciones(){
+    this.dialog.open(ModDevolucionesConsultaComponent,
+      {
+        maxWidth: '100vW',
+        width: '90%',
+        data: "devolucion"
+      })
+  }
+  abrirVentas(){
+    this.router.navigate(['/operaciones/historial']);
+  }
+  abrirDetallesPago(){
+    this.dialog.open(ModDetallespagoComponent,
+      {
+        maxWidth: '100vW',
+        width: '90%'
+      }
+    )
+  }
+   abrirCategorias(){
+        this.dialog.open(ModCategoriasComponent, 
+          { 
+            maxWidth: '30vW',
+            width: '100%',
+          }
+        )
+      }
+        abirServicio(){
+          this.dialog.open(ModServiciosComponent,
+            {
+              maxWidth: '60vW',
+              width: '80%'
+            }
+          )
+        }
+
+    abrirAltasLetras(){
+      this.dialog.open( AltaletrasComponent, {
+        width: '120%',
+      })
     }
+  abrirPagos(){
+    this.dialog.open(ModDetallespagoComponent,
+      {
+        maxWidth: '100vW',
+        width: '90%',
+        data: "pago"
+      })
 
   }
 
+
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSheetOverviewExampleSheetComponent);
+  }
+
+
+
+ togglesubmenu(){
+  localStorage.setItem('isVisible', 'true');  // Almacena el valor en localStorage
+  }
   comprobarTurno(){
     this.api.consultaDatos(`administracion/turno/${this.usuarioId}/${this.sucursalId}`).subscribe((turno: Array<any>) => {
       this.turnoAbierto = turno.length > 0;
+
     })
   }
 
+
   abrirTurno(){
     swal({title: 'Abrir Turno', text: '¿Seguro que desea abrir turno? Tendrá que especificar la cantidad con la que abre el turno', buttons: ['No', 'Si'], icon: "warning"}).then((response) => {
+     if(response){
       const config = {
         id: "dialog1",
         data: {
@@ -94,12 +272,33 @@ export class FullLayoutComponent implements OnInit, AfterViewInit{
         },
         disableClose: true,
       }
-      this.dialog.open(ModTurnoComponent, config);
-    })
+      const dialog = this.dialog.open(ModTurnoComponent, config);
+      dialog.afterClosed().subscribe((response) => {
+        window.location.reload();
+      })
+    }})
   }
 
   ngOnInit(){
     this.cargarSucursales();
+    if(isPlatformBrowser(this.platformId)){
+      this.screenWidth = window.innerWidth;
+    }
+  }
+  // Este decorador escucha el evento de cambio de tamaño de la ventana (resize).
+  // Cada vez que la pantalla cambia de tamaño, se ejecuta el método onResize.
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    let width = (event.target as Window).innerWidth;
+    if( width<= 1380 ) {
+      this.renderer.addClass(this.navegacion.nativeElement, 'hide-important');
+      this.renderer.addClass(this.contenido.nativeElement,'contentmedio-important')
+      this.renderer.removeClass(this.centrar.nativeElement,'d-flex');
+    } else {
+      this.renderer.removeClass(this.navegacion.nativeElement, 'hide-important');
+      this.renderer.addClass(this.centrar.nativeElement,'d-flex');
+      this.renderer.removeClass(this.contenido.nativeElement, 'contentmedio-important');
+    }
   }
 
   logout(){
@@ -146,7 +345,14 @@ export class FullLayoutComponent implements OnInit, AfterViewInit{
     }
     window.location.reload();
   }
-
+  abrirClientes(){
+    this.dialog.open(ModListadoComponent,
+      {
+        maxWidth: '100vW',
+        width: '90%'
+      }
+    )
+  }
   filtrarPermisos(){
     this.element.forEach((element: ElementRef, indice) => {
       /**

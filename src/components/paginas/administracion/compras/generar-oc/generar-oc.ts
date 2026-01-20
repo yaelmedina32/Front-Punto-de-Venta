@@ -1,0 +1,433 @@
+import { AfterViewInit,ViewChildren, Component, OnInit, ViewEncapsulation, Input, OnChanges, SimpleChanges, signal, inject } from '@angular/core';
+import { CompartidosModule } from '../../../../modulos/compartidos.module';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { formatNumber } from '@angular/common';
+import { map, Observable, startWith } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { ApiService } from '../../../../services/api.service';
+import { ListaProductosResumido } from '../../../operaciones/productos/listaproductos/listaproductos.interface';
+import { ListaProveedores } from '../../../operaciones/proveedores/listaproveedores/listaproveedores.interface';
+import swal from 'sweetalert';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthGuard } from '../../../../services/auth-guard';
+import { ModOrdenesCompraComponent } from '../mod-ordenes-compra/mod-ordenes-compra.component';
+import { SessionService } from '../../../../services/session.service';
+import { Renderer2 } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { MouseEventService } from '../../../../services/MouseEventService.service';
+import { OrdenesCompra } from '../compras.interface';
+import { ComprasService } from '../compras.service';
+
+export class UnidadesMedida{
+  unidadid: number;
+  descripcion: string;
+}
+
+export class InventarioPosterior{
+  cantidad: number;
+  costo: number;
+}
+
+interface OrdenesCompraConProductos extends OrdenesCompra{
+  productos: Array<any>;
+}
+
+@Component({
+    selector: 'app-generar-oc',
+    imports: [CompartidosModule],
+    templateUrl: './generar-oc.html',
+    styleUrl: './generar-oc.css',
+    encapsulation: ViewEncapsulation.None
+})
+export class GenerarOcComponent implements OnInit, AfterViewInit, OnChanges{
+    posicion :boolean;
+  mensaje: string = '';
+  @ViewChildren('mostrarAlta') elementosBotones: QueryList<ElementRef>;
+  arregloElementos: ElementRef[] = [];
+  permisosBotones: any[] = [];
+  
+  menu: any[] = [];
+  menuId = 1;
+
+  formGroup: FormGroup;
+  nombreProdSeleccionado = "";
+
+  proveedoresFiltrados: Observable<any>;
+  productosFiltrados: Observable<any>;
+  cantidad = new FormControl();
+  precioUnitario = new FormControl();
+  solicitante = new FormControl({value: '', disabled: false});
+  proveedor = new FormControl({value: '', disabled: this.solicitante.value == ''});
+  producto = new FormControl({value: '', disabled: this.proveedor.value == ''});
+  contenedor = new FormControl();
+  cantidadSI = new FormControl();
+  costoSI = new FormControl();
+  contenedoresFiltrados: Observable<any>;
+
+  dataSourceOC = signal<MatTableDataSource<any>>(new MatTableDataSource<any>());
+  productos: Array<ListaProductosResumido> = [];
+  importe :string = '0';
+  descripcionOC = new FormControl();
+  aplicaInventario: boolean = false;
+  almacenId = 0;   
+  unidades: Array<UnidadesMedida> = [];
+  urlNavegacion = "";
+  usuarioId = 0;
+  sinInventario = false;
+  contenedores: Array<any> = []
+  dataSourceInventarios = new MatTableDataSource<InventarioPosterior>();
+
+  proveedores: Array<ListaProveedores> = []
+  
+  form : FormGroup;
+
+  @Input() ordenCompraSeleccionada: OrdenesCompraConProductos = {} as OrdenesCompraConProductos;
+
+
+  columnasDesplegadasOC = ['inventario', 'producto', 'cantidad', 'unidad', 'precio', 'iva', 'subtotal', 'totaliva', 'importe', 'acciones'];
+  columnasDesplegadasInventario = ['cantidadSI', 'costo'];
+
+  constructor(private api: ApiService, private dialog: MatDialog, private comprasService: ComprasService, private session: SessionService, private renderer: Renderer2, public fb: FormBuilder, private mouseEventService: MouseEventService){
+    this.form = this.fb.group({  });
+    if (typeof window !== 'undefined') {
+      this.usuarioId = parseInt(sessionStorage.getItem('usuarioid') || '0');
+
+      this.almacenId = parseInt(localStorage.getItem('almacenId') || '0');
+      this.solicitante.setValue(sessionStorage.getItem('nombreusuario') || '');
+      const auxiliar = localStorage.getItem('navegacion');
+      !auxiliar?.includes('/Compras') ? localStorage.setItem('navegacion', auxiliar + '/Compras') : null;
+      this.urlNavegacion = 'Inicio/Compras';
+      localStorage.setItem('actual', '1');
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if(this.sinInventario == false ){
+    this.arregloElementos = this.elementosBotones.toArray();
+    this.obtenerPermisoBotones();
+    }
+
+  }
+
+  ngOnInit(): void {
+    this.mouseEventService.mouseEnter$.subscribe(isEntered => {
+      this.posicion=isEntered;
+    });
+  
+
+    this.sinInventario
+    this.session.validarSesion(this.menuId);
+    if(this.almacenId == 0){
+      swal("Almacén no seleccionado.", "Seleccion un almacén para continuar.", "warning");
+      return;
+    }
+    this.importe = '0';
+    this.obtenerProductos(0);
+    this.obtenerCatalogos();
+    this.dataSourceInventarios.data = [
+      {
+        cantidad: 0,
+        costo: 0,
+      }
+    ]
+    this.dataSourceOC.set(new MatTableDataSource<any>([
+      {
+        inventario: true,
+        cantidad: 0,
+        producto: '',
+        productoid: 0,
+        unidadid: 0,
+        precio: 0,
+        iva: false,
+        subtotal: 0,
+        totaliva: 0,
+        importe: 0,
+        cantidadinventario: 0,
+        inputId: 1,
+      }
+    ]))
+    this.solicitante.disable();
+    this.solicitante.value != '' ? this.proveedor.enable() : this.proveedor.disable;
+    this.form.addControl('1', new FormControl());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ordenCompraSeleccionada']) {
+      this.ordenCompraSeleccionada = changes['ordenCompraSeleccionada'].currentValue;
+      if(!this.ordenCompraSeleccionada.productos){
+        return;
+      }
+
+      this.descripcionOC.setValue(this.ordenCompraSeleccionada.descripcion || '');
+      this.proveedor.setValue(this.ordenCompraSeleccionada.proveedor || '');
+      this.dataSourceOC().data = [];
+      const productosOC: Array<any> = []
+      this.ordenCompraSeleccionada.productos.forEach(ele => {
+        this.form.addControl(ele.consecutivo.toString(), new FormControl(ele.producto));
+        productosOC.push({
+          inventario: true,
+          cantidad: ele.cantidad,
+          producto: ele.producto,
+          productoid: ele.productoid,
+          unidadid: ele.unidadid,
+          precio: ele.precioUnitario,
+          iva: parseFloat(ele.totalIva) > 0,
+          subtotal: parseFloat(ele.precioUnitario) * parseFloat(ele.cantidad),
+          totaliva: ele.totalIva,
+          importe: parseFloat(ele.importe),
+          inputId: ele.consecutivo,
+        })
+      })
+      this.dataSourceOC.set(new MatTableDataSource<any>(productosOC));
+    }
+  }
+
+  obtenerProductos(formName: number){
+    //AQUI TENGO QUE VOLVER A CONSULTAR CADA QUE SE CAMBIE EL FILTRO, YA QUE NO PUEDO TRAER LOS 54000 REGISTROS DE LA BD, PORQUE SE ALENTARIA MUCHO
+    const datos = {
+      //VALIDO QUE, EN CASO DE QUE EN EL FORMCONTROL NO EXISTA ESE FORMNAME, NO SE HAGA LA CONSULTA POR EL NOMBRE
+      filtroProducto: this.form.controls[formName] ? this.form.controls[formName].value : '',
+    }
+    this.api.consultaDatosPost('operaciones/productos/resumido/' + this.almacenId, datos).subscribe((productos: Array<ListaProductosResumido>) => {
+      this.productos = productos;
+      this.productosFiltrados = this.producto.valueChanges.pipe(
+        startWith(''),
+        map(valor => this.filtrarProducto(valor || ''))
+      );
+    })
+  }
+
+  obtenerCatalogos(){
+      this.api.consultaDatos('operaciones/proveedores').subscribe((proveedores: Array<ListaProveedores>) => {
+        this.proveedores = proveedores;
+        this.proveedoresFiltrados = this.proveedor.valueChanges.pipe(
+          startWith(''),
+          map(valor => this.filtrarProveedor(valor!))
+        );  
+        this.api.consultaDatos('administracion/unidades').subscribe((unidades: Array<UnidadesMedida>) => {
+          this.unidades = unidades;
+          this.api.consultaDatos('administracion/contenedores/' + this.almacenId).subscribe((contenedores: Array<any>) => {
+            this.contenedores = contenedores;
+            this.contenedoresFiltrados = this.contenedor.valueChanges.pipe(
+              startWith(''),
+              map(valor => this.filtrarContenedores(valor)),
+            )
+          })
+        }) 
+      })
+  }
+
+  filtrarContenedores(valor: number){
+    return this.contenedores.filter(ele => ele.contenedor.toString().includes(valor));
+  }
+
+  abrirConsulta(){
+    this.dialog.open(ModOrdenesCompraComponent,
+      {
+        maxWidth: '90vW',
+        width: '100%',
+      }
+    )
+  }
+
+  seleccionarProducto(indice: number, valor: string){
+    const productoid = this.productos.find(ele => ele.nombre == valor)?.productoid;
+    this.dataSourceOC().data[indice]['productoid'] = productoid
+    this.api.consultaDatos(`administracion/cantidad/inventario/${productoid}/${this.almacenId}`).subscribe((conteo: Array<any>) => {
+      this.dataSourceOC().data[indice]['cantidadinventario'] = conteo[0]['inventareado'];
+    })
+  }
+  
+  agregarProducto(){
+    this.dataSourceOC().data.push({
+      inventario: true,
+      cantidad: 0,
+      producto: '',
+      unidadid: 0,
+      precio: 0,
+      importe: 0,
+      idInput: this.dataSourceOC().data.length + 1,
+    })
+    this.form.addControl(this.dataSourceOC().data.length.toString(), new FormControl());
+    this.dataSourceOC().filter = "";
+  }
+
+  eliminarProducto(indice: number){
+    swal({text: `¿Desea eliminar el producto ${this.dataSourceOC().data[indice]['producto']}?`, buttons: ['No', 'Si']}).then((response: any) => {
+      if(response){
+        this.dataSourceOC().data.splice(indice, 1);
+        this.dataSourceOC().filter = "";
+      }
+    })
+  }
+
+  filtrarProveedor(valor: string) {
+    return this.proveedores.filter(ele => 
+      ele.nombrefiltro.toLowerCase().includes(valor.toLowerCase())
+    );
+  }
+
+filtrarProducto(valor: string): ListaProductosResumido[] {
+    const filtro = valor.toLowerCase();
+  
+    return this.productos
+      .filter(producto => producto.nombrefiltro) // Valida que nombrefiltro no sea null ya que aveces trae null
+      .filter(producto => producto.nombrefiltro.toLowerCase().includes(filtro));
+  }
+  
+  calcularImporte(indice: number){
+    if(this.dataSourceOC().data[indice]['cantidad'] != 0 && this.dataSourceOC().data[indice]['precio'] != 0){
+      this.dataSourceOC().data[indice]['subtotal'] = (parseFloat(this.dataSourceOC().data[indice]['cantidad']) * parseFloat(this.dataSourceOC().data[indice]['precio']));
+      this.dataSourceOC().data[indice]['totaliva'] = this.dataSourceOC().data[indice]['iva'] ? this.dataSourceOC().data[indice]['subtotal'] * 0.16 :  0;
+      this.dataSourceOC().data[indice]['importe'] = this.dataSourceOC().data[indice]['iva'] ? this.dataSourceOC().data[indice]['subtotal'] * 1.16 :  this.dataSourceOC().data[indice]['subtotal'];
+    }
+  }
+
+  devolverSubtotal(indice: number){
+    return this.dataSourceOC().data[indice]['subtotal'];
+  }
+
+  devolverTotalIva(indice: number){
+    return this.dataSourceOC().data[indice]['totaliva'];
+  }
+
+  devolverImporte(indice: number){
+    return this.dataSourceOC().data[indice]['importe'];
+  }
+
+  activarInput(valor: string, input: string){
+    input == 'proveedor' ? valor != '' ? this.proveedor.enable() : this.proveedor.disable() : valor != '' ? this.producto.enable() : this.producto.disable();
+  }
+  obtenerPermisoBotones() {
+    this.api.consultaDatos('configuraciones/permisoBoton/' + this.usuarioId).subscribe({
+      next: (permisos: any[]) => {
+      const menu = permisos.map(permisos=> permisos.menuId);
+      this.menu = menu;
+        this.permisosBotones = permisos;
+        
+        this.compararPermisosConBotones();
+      },
+      error: (error) => {
+        console.error('Error al obtener permisos de botones:', error);
+      }
+    });
+  }
+  compararPermisosConBotones() {
+    this.arregloElementos.forEach((elemento) => {
+      
+      const botonId = elemento.nativeElement.id; 
+      const permisoEncontrado = this.permisosBotones.find(permiso => permiso.nombre === botonId);
+      if (permisoEncontrado) {
+        this.renderer.setProperty(elemento.nativeElement, 'disabled', false); 
+      } else {
+        this.renderer.setStyle(elemento.nativeElement, 'display', 'none'); 
+      }
+    });
+  }
+  guardarOC(){
+    const proveedorid: any = this.proveedores.findIndex(ele => ele.nombre == this.proveedor.value);
+    
+    if(this.solicitante.value == ''){
+      swal("Error con el solicitante.", "El nombre del solicitante no puede ir en blanco.", "error");
+      return;
+    }
+
+    if(proveedorid == -1){
+      swal("El proveedor no fue encontrado.", "Revise el nombre o que el campo no esté en blanco.", "error");
+      return;
+    }
+    this.api.consultaDatos('administracion/maxOC').subscribe((maxOC: Array<any>) => {
+    const oc: any = (maxOC[0]['ordencompraid'] + 1);
+    if(!this.sinInventario){
+      for(let i = 0; i < this.dataSourceOC().data.length; i++){
+        if(this.dataSourceOC().data[i]['cantidad'] <= 0 || this.dataSourceOC().data[i]['precio'] <= 0 ){  
+          swal("Error con la cantidad y/o precio.", "No puede tener una cantidad o precio igual o menor a 0.", "error");
+          return;
+        }
+        if(this.dataSourceOC().data[i]['unidadid'] == 0 ){  
+          swal("Unidad de medidad no seleccionada", "Seleccione una unidad de medidad para guardar la orden de compra", "error");
+          return;
+        }
+        if(this.dataSourceOC().data[i]['producto'] == ''){
+          swal("Error con el producto.", "El producto no puede estar vacío.", "error");
+          return;
+        }
+      }
+      let importeTotal = formatNumber(this.dataSourceOC().data.reduce((acum, actual) => acum += actual.importe, 0), 'en-us', '3.1-1');
+        swal({title: `¿Seguro que desea generar la Orden de Compra: "${oc}"?`, 
+          text: `Se generará una OC por un total de ${importeTotal}.`, 
+          icon: "warning", 
+          buttons:['No', 'Si']})
+          .then((response: any) => {
+            if(response){
+              this.dataSourceOC().data.forEach(currentItem => {
+                currentItem['oc'] = oc;
+                currentItem['usuarioid'] = this.usuarioId
+                currentItem['proveedorid'] = this.proveedores.find(ele => ele.nombre == this.proveedor.value)?.proveedorid;
+                currentItem['nombreproducto'] = currentItem['producto'];
+                currentItem['producto'] = this.productos.findIndex(ele => ele.nombre == currentItem['producto'])  == -1   
+                || !currentItem['inventario'] 
+                  ? 0 
+                : currentItem['productoid'];
+                currentItem['descripcion'] = this.descripcionOC.value;
+                currentItem['solicitante'] = this.solicitante.value;
+                currentItem['almacenId'] = this.almacenId;
+              });
+              if(!this.ordenCompraSeleccionada.productos){
+                this.api.insertarDatos('administracion/ordencompra', this.dataSourceOC().data).subscribe((response: any) => {
+                  this.dataSourceOC.set(new MatTableDataSource<any>([]));
+                  this.proveedor.setValue('');
+                  this.solicitante.setValue('');
+                  this.descripcionOC.setValue('');
+                  this.comprasService.notificarOCActualizada();
+                })
+              } else {
+                this.ordenCompraSeleccionada.importetotal = parseFloat(importeTotal);
+                this.ordenCompraSeleccionada.productos = this.dataSourceOC().data;
+                this.api.modificarDatos('administracion/ordencompra', this.ordenCompraSeleccionada).subscribe((response: any) => {
+                  this.dataSourceOC.set(new MatTableDataSource<any>([]));
+                  this.ordenCompraSeleccionada.productos = [];
+                  this.comprasService.notificarOCActualizada();
+                })
+              }
+            }
+        })
+    }else{
+      if(this.cantidadSI.value <= 0){
+        swal("Error con la cantidad", "La cantidad no puede ser menor o igual que cero", "error");
+        this.cantidadSI.setValue('1');
+        return;
+      }
+      if(this.costoSI.value <= 0){
+        swal("Error con el costo", "El costo no puede ser menor o igual que cero", "error");
+        this.costoSI.setValue('1');
+        return;
+      }
+      swal({title: 'Guardar OC SIN productos', text: '¿Desea guardar la OC sin productos?\nTendrá que vincular el inventario posteriormente con esta OC'
+        , icon: "warning",
+      buttons: ['No', 'Si']}).then((response) => {
+        if(response){
+          const datos = {
+            sininventario: true,
+            costo: this.costoSI.value,
+            cantidad: this.cantidadSI.value,
+            almacenId: this.almacenId,
+            oc: oc,
+            proveedorid: this.proveedores.find(ele => ele.nombre == this.proveedor.value)?.proveedorid,
+            solicitante: this.solicitante.value,
+            descripcion: this.descripcionOC.value,
+            usuarioid : this.usuarioId,
+          }
+          this.api.insertarDatos('administracion/ordencompra', datos).subscribe((response) =>{
+            this.costoSI.setValue('');
+            this.cantidadSI.setValue('');
+            this.obtenerCatalogos();
+          })
+        }
+      })
+    }
+  })
+  }
+
+}

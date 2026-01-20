@@ -16,13 +16,16 @@ export interface ListaProductos {
     , aplicacion: string
     , tipovehiculo: string
     , marcaid: number
-    , nombrefiltrado: string,
+    , nombrefiltrado: string
+    , precioCompra: number
+
 }
 
 export interface ListaProductosResumido {
     productoid: number
     , clave: string
     , nombre: string
+    , nombrefiltro: string
 }
 
 export interface Catergorias{

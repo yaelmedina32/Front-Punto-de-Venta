@@ -1,0 +1,101 @@
+<section class = "section-oc">
+  <div class = "flex justify-end">
+    <span class = "text-white p-3 w-[15%] flex items-center gap-3 hover:bg-gray-700 rounded-lg cursor-pointer buttonVolver" (click)="cerrar()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+      </svg> Volver
+    </span>
+  </div>
+  <div class="divGrid">
+    <div class = "flex items-center gap-2 grid-cols-2 justify-center detallesOC">
+      <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Folio: </strong> {{ordenSeleccionada.ordencompraid}} </span>
+      <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Total OC: </strong> {{ordenSeleccionada.importetotal | currency: 'USD'}} </span>
+      <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Solicitante: </strong> {{ordenSeleccionada.solicitante}} </span>
+      <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Fecha OC: </strong> {{ordenSeleccionada.fecha}} </span>
+      <!-- <button class = "text-white p-3 flex items-center gap-3 bg-gray-700 shadow-sm hover:bg-gray-700 rounded-lg cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+          <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+          <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+        </svg> Imprimir
+      </button> -->
+    </div>
+  </div>
+  
+  @if(proveedor){
+    <div class="proveedor-info">
+      <h4>Proveedor: {{proveedor.nombre}}</h4>
+      <p>RFC: {{proveedor.rfc}}</p>
+    </div>
+  }
+
+  <div class="table-container">
+      <!-- <span class = "text-white p-1 flex items-center gap-3 text-xs"> <strong> <i> (Pase el mouse por cada registro para ver la cantidad vendida y surtida) </i> </strong> </span> -->
+      <mat-table [dataSource]="datosOC">
+        <ng-container matColumnDef="producto">
+          <mat-header-cell *matHeaderCellDef> Producto </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.cantidad}}x - {{element.producto}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="vendido">
+          <mat-header-cell *matHeaderCellDef> Vendido </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+              {{element.vendidos}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="surtido">
+          <mat-header-cell *matHeaderCellDef> Inventario </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            @if(element.cantidadSurtidos < element.cantidad){
+              <button class = "text-white px-3 py-1 flex items-center gap-3 text-xs bg-gray-700 border border-white hover:bg-gray-400 rounded-lg cursor-pointer"
+                (click)="surtir(element.ordencompraid)"
+              [matTooltip]="'Click para Surtir'">
+                {{element.cantidadSurtidos}}
+              </button>
+            } @else{
+              {{element.cantidadSurtidos}}
+            }
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="unidad">
+          <mat-header-cell *matHeaderCellDef> Unidad </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.unidad}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="preciounitario">
+          <mat-header-cell *matHeaderCellDef> P/U Sin IVA </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.precioUnitario | currency: 'USD'}}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="iva">
+          <mat-header-cell *matHeaderCellDef> IVA Unitario </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.totalIva | currency: 'USD'}}
+          </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="preciounitarioiva">
+          <mat-header-cell *matHeaderCellDef> P/U Con IVA </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{element.precioUnitarioIva | currency: 'USD'}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="importe">
+          <mat-header-cell *matHeaderCellDef> Subtotal </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{(element.precioUnitario * element.cantidad) | currency: 'USD'}}
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumnsOC; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsOC;" [matTooltip]="row.folios ? 'Folios de Venta: ' + row.folios.substring(0, row.folios.length - 2) : ''"></mat-row>
+      </mat-table>
+      <div class="total-importe">
+        <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Subtotal  IVA: </strong> {{(devolverTotalIVA()) | currency: 'USD'}} </span>
+        <span class = "text-white p-3 flex items-center gap-3 text-lg"> <strong> Total: </strong> {{(ordenSeleccionada.importetotal) | currency: 'USD'}} </span>
+
+      </div>
+    </div>
+</section>

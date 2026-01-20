@@ -1,28 +1,51 @@
+<div class="d-flex justify-content-between fondo" style="margin: 0%;">
 <div id = "body">
     <div class="login">
         <div class="login-screen">
             <br>
+            <div  class="d-flex justify-content-between">
             <div class="app-title">
-                <h3 style = "color: #252729;">Acceso</h3>
+                <h2 style = "color:aliceblue; border-bottom: #ffffff solid 1px; display: inline-block;">Login</h2>
+            </div>
+            <div style="position: relative; width: 30%; height: 2%;">
+                <img src="/LogoSinFondo.png" alt="Logo" class="logo" style="width: 80%;">
+            </div>
+        </div>
+            <div class="app-title"> 
+                <h5 style="color:rgb(182, 186, 189);">Welcome onboard with us!</h5>
             </div>
 
+            <h6 style="color:rgb(169, 173, 176); margin-bottom: 20px;">&nbsp;&nbsp;Username</h6>
             <div class="login-form">
                 <div class="control-group">
-                <input type="text" class="login-field" value="" placeholder="Usuario" id="login-name" [formControl] = "usuario" matInput (keydown.enter)="login()">
+                <input type="text" class="login-field" value="" placeholder="  Usuario" id="login-name" [formControl] = "usuario" matInput (keydown.enter)="login()">
                 <label class="login-field-icon fui-user" for="login-name"></label>
                 </div>
-
+                <h6 style="color:rgb(169, 173, 176); margin-bottom: 20px;">&nbsp;&nbsp;Password</h6>
                 <div class="control-group">
-                <input type="password" class="login-field" value="" placeholder="Contraseña" id="login-pass" [formControl] = "clave" matInput (keydown.enter)="login()">
-                <label class="login-field-icon fui-lock" for="login-pass"></label>
+                    <form class = "d-flex align-items-center" #form class="login-field">
+                        <input type="password"  #input value="" placeholder="  Contraseña" id="login-pass" [formControl] = "clave" matInput (keydown.enter)="login()" style="color: aliceblue; background-color: #171821; padding: 0%" width="50%">
+                        <i (click) = "cambiarInput()" >
+                            <svg style="position:absolute; margin-left:5px; margin-top:2px"  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                            </svg>
+                        </i>
+                    </form>
                 </div>
 
                 <!-- <a class="btn btn-primary btn-large btn-block" href="#" (click)="login()">Login</a> -->
-                <button class = "btn btn-danger btn-large btn-block" (click)="login()">Login</button>
+                <button class = "btn btn-danger btn-large btn-block" (click)="login()" >Login</button>
                 <a class="login-link" href="#"></a>
             </div>
         </div>
-        <!-- <img src="/distribuible_dctires/logo.jpg" alt="" style = "width: 40%;"> -->
-        <img src="/logo.jpg" alt="" style = "width: 40%;">
+  
+     
     </div>
+
 </div>
+<div class="OtrasPantallas" style="position: relative; width: 100%; height: 0px; margin: 0%;padding: 0%;">
+    <img src="/llantaloginAct.png" alt="Logo" class="logo" style="width: 91%; margin-left: 90px;  margin-top: 10vh;  position:static;">
+</div>  
+
+            </div>

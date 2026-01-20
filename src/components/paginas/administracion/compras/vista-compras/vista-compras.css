@@ -1,0 +1,154 @@
+/* Mobile-first responsive styles for vista-compras */
+
+section {
+  padding: 16px;
+  background-color: #21222D;
+  border-radius: 8px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.divGrid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-title {
+  margin: 0;
+  padding: 8px 0;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+mat-table {
+  width: 100%;
+  color: #ffffff !important;
+  min-width: 900px; /* fuerza scroll horizontal en pantallas pequeñas */
+  background-color: transparent !important;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+/* Celdas: espaciado y comportamiento en pantallas pequeñas */
+mat-header-cell,
+mat-cell {
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+mat-header-row{
+  background-color: #21222D !important;
+}
+
+mat-label{
+  font-size: 0.7rem;
+}
+
+.oc-rechazado{
+  color: #ff0000c2;
+}
+
+.mat-mdc-menu-item{
+  border: 1px solid #807b7b;
+  padding: 8px 12px;
+  margin: 4px 0;
+}
+
+/* Celda de acciones: distribución flexible y envoltura */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Botones de acción: coherencia visual */
+.Grbtn,
+.Cvbtn,
+.elibtn,
+.Prbtn,
+.elisupbtn {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #ffffff;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.Grbtn { border-color: #82f06cd6; background-color: rgba(130, 240, 108, 0.2); }
+.Grbtn:hover { background-color: rgba(130, 240, 108, 0.35); }
+
+.Cvbtn { border-color: #fad028; background-color: rgba(249, 212, 64, 0.25); }
+.Cvbtn:hover { background-color: rgba(249, 212, 64, 0.4); }
+
+.elibtn { border-color: #ff9800; background-color: rgba(255, 152, 0, 0.2); }
+.elibtn:hover { background-color: rgba(255, 152, 0, 0.35); }
+
+.Prbtn { border-color: #001aff; background-color: rgba(38, 0, 255, 0.15); }
+.Prbtn:hover { background-color: rgba(47, 0, 255, 0.3); }
+
+.elisupbtn { border-color: #ff0000; background-color: rgba(255, 0, 0, 0.15); }
+.elisupbtn:hover { background-color: rgba(255, 0, 0, 0.3); }
+
+/* Responsividad */
+@media (max-width: 900px) {
+  section { margin: 12px; padding: 12px; }
+  .page-title { font-size: 1rem; }
+  mat-table { min-width: 800px; }
+  mat-header-cell,
+  mat-cell { padding: 8px 10px; }
+}
+
+@media (max-width: 600px) {
+  section { margin: 8px; padding: 10px; }
+  .page-title { font-size: 0.95rem; }
+  mat-table { min-width: 720px; }
+  mat-header-cell,
+  mat-cell { padding: 6px 8px; }
+  .actions-cell { gap: 6px; }
+}
+
+.section-vista-compras .mat-mdc-paginator{
+  background-color: #21222D !important;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+.container-views{
+  max-height: 680px;
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 100% 0;
+  position: relative;
+  overflow: hidden; /* Esto sí funcionará para los hijos directos */
+  transition: grid-template-columns 0.3s ease;
+}
+
+.container-views.vistaOC{
+  grid-template-columns: 0 100%;
+}
+
+.container-views.vistaOC > .oc_view{
+  width: 100%;
+}
+
+.table_view{
+  grid-column: 1 / 2;
+  transition: transform 0.3s ease;
+}
+
+.oc_view{
+  grid-column: 2 / 3; /* Ocupa desde columna 1 hasta 3 */
+  border-radius: 8px;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 0;
+  overflow: hidden;
+}

@@ -1,121 +1,179 @@
 <section>
-    <h3> Consulta de Ventas </h3>
+    <div class = "divGrid">
+        <h3 style="color: aliceblue;"> Consulta de Ventas </h3>
+    </div>
     <div class = "d-flex justify-content-around">
         <mat-slide-toggle (change)="filtrarCXP($any($event.checked))" [(ngModel)] = "filtrarRegistrados"> Filtrar Cuentas por Pagar </mat-slide-toggle>
         <h6>Total Ventas: <strong>{{totalVentas}}</strong> </h6>
     </div>
-    <mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="folioventa">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-form-field appearance="outline">
-                    <mat-label> Folio de Venta </mat-label>
-                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'folioventa')">
-                </mat-form-field>    
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.folioventa}}
-            </mat-cell>
-        </ng-container>
-    
-        <ng-container matColumnDef="montoventa">
-            <mat-header-cell *matHeaderCellDef> 
-            <mat-form-field appearance="outline">
-                <mat-label> Monto de Venta </mat-label>
-                <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'montoventa')">
-            </mat-form-field>        
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.montoventa | currency: 'USD'}}
-            </mat-cell>
-        </ng-container>
+    <div class = "datosOC">
+    <cdk-virtual-scroll-viewport tvsItemSize="50" headerHeight="56" class="viewport-ventas">
+        <mat-table [dataSource]="dataSource" class="apliColor">
+            <ng-container matColumnDef="folioventa" >
+                <mat-header-cell *matHeaderCellDef> 
+                    <mat-form-field>
+                        <mat-label> Folio </mat-label>
+                        <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'folioventa')" class = "inputFolio">
+                    </mat-form-field>    
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.folioventa}}</p> 
+                </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="montoventa">
+                <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field >
+                    <mat-label> Monto de Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'montoTotal')">
+                </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p class = "button-text" [matTooltip]="'Sub: ' + (element.montoventa | currency: 'USD') + ' - IVA: ' + ((element.iva || 0) | currency: 'USD')">
+                        {{element.montoTotal | currency: 'USD' }}
+                    </p> 
+                </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="fechaventa">
-            <mat-header-cell *matHeaderCellDef> 
-            <mat-form-field appearance="outline">
-                <mat-label> Fecha de la Venta </mat-label>
-                <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'fechaventa')">
-            </mat-form-field>        
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.fechaventa}}
-            </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="detalle">
+                <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field>
+                    <mat-label> Detalle Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'detalle')">
+                </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.detalle}}</p> 
+                </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="cliente">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-form-field appearance="outline">
-                    <mat-label> Cliente </mat-label>
-                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'cliente')">
-                </mat-form-field>            
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.cliente}}
-            </mat-cell>
-        </ng-container>
-    
-        <ng-container matColumnDef="tipopago">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-form-field appearance="outline">
-                    <mat-label> Tipo de Pago </mat-label>
-                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'tipopago')">
-                </mat-form-field>            
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.tipopago}}
-            </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="fechaventa">
+                <mat-header-cell *matHeaderCellDef> 
+                <mat-form-field >
+                    <mat-label> Fecha de la Venta </mat-label>
+                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'fechaventa')">
+                </mat-form-field>        
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.fechaventa}}</p> 
+                </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="tipoventa">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-form-field appearance="outline">
-                    <mat-label> Tipo de Venta </mat-label>
-                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'tipoVenta')">
-                </mat-form-field>            
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.tipoVenta}}
-            </mat-cell>
-        </ng-container>
-                
-    
-        <ng-container matColumnDef="estatus">
-            <mat-header-cell *matHeaderCellDef> 
-                <mat-form-field appearance="outline">
-                    <mat-label> Estatus de la Venta </mat-label>
-                    <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'estatus')">
-                </mat-form-field>            
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                {{element.estatus}}
-            </mat-cell>
-        </ng-container>
-                
-        <ng-container matColumnDef="editar">
-            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-                @if(element.cantidadpagos == 0){
-                    <button class = "btn btn-primary" (click)="editarVenta(element.folioventa)" matTooltip="Editar Venta" >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
-                        </svg>
-                    </button> &nbsp;&nbsp;
-                }@else{
-                    <button class = "btn btn-info" (click)="editarVenta(element.folioventa)" matTooltip="Ver Venta" >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                        </svg>
-                    </button> &nbsp;&nbsp;
-                }
-                <button class = "btn btn-warning" *ngIf = "element.estatus == 'Registrado'" matTooltip="Abonar a deuda" (click) = "abonarPago(element.folioventa)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
-                        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
-                    </svg>
-                </button>
-            </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="numero">
+                <mat-header-cell *matHeaderCellDef> 
+                    <mat-form-field >
+                        <mat-label> Numero </mat-label>
+                        <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'numero')">
+                    </mat-form-field>            
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.numero}}</p> 
+                </mat-cell>
+            </ng-container>
 
-        <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: columnasDesplegadas;"></mat-row>
-    </mat-table>
+            <ng-container matColumnDef="cliente">
+                <mat-header-cell *matHeaderCellDef> 
+                    <mat-form-field >
+                        <mat-label> Cliente </mat-label>
+                        <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'cliente')">
+                    </mat-form-field>            
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.cliente}}</p> 
+                </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="Vendedor">
+                <mat-header-cell *matHeaderCellDef> 
+                    <mat-form-field >
+                        <mat-label> Vendedor </mat-label>
+                        <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'Vendedor')">
+                    </mat-form-field>            
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.Vendedor}}</p> 
+                </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="estatus">
+                <mat-header-cell *matHeaderCellDef> 
+                    <mat-form-field >
+                        <mat-label> Estatus </mat-label>
+                        <input type="text" matInput (keyup)="filtrarDatos($any($event.target).value, 'estatus')">
+                    </mat-form-field>            
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                    <p>{{element.estatus}}</p> 
+                </mat-cell>
+            </ng-container>
+                    
+            <ng-container matColumnDef="editar">
+                <mat-header-cell *matHeaderCellDef class="acciones-column"> Acciones </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="acciones-column">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button class = "pagobtn" *ngIf = "element.estatus == 'Con adeudo'" matTooltip="Pagar" (click) = "abonarPago(element.folioventa)">
+                            <svg style="color: #fad028; ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+                                <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
+                            </svg>
+                        </button>
+                        @if(element.estatus != 'Cancelado'){
+                            @if(element.cantidadpagos == 0){
+                                <button class = "editbtn" (click)="imprimirTicket(element.folioventa)" matTooltip="Reimprimir Ticket" >
+                                    <svg style="color: rgb(141, 216, 254) ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                                    </svg>
+                                </button>
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Acciones">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                    </svg>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="verVenta(element.folioventa)">
+                                        <svg style="color: rgb(141, 216, 254); margin-right: 8px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                        </svg>
+                                        <span>Ver Venta</span>
+                                    </button>
+                                    <button mat-menu-item (click)="editarVenta(element.folioventa)">
+                                        <svg style="color: rgb(141, 216, 254); margin-right: 8px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                                        </svg>
+                                        <span>Editar Venta</span>
+                                    </button>
+                                    <button mat-menu-item (click)="cancelarVenta(element.folioventa)">
+                                        <svg style="color: rgb(255, 0, 0); margin-right: 8px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                        </svg>
+                                        <span>Eliminar Venta</span>
+                                    </button>
+                                </mat-menu>
+                            }@else{
+                                <button class = "editbtn" (click)="verVenta(element.folioventa)" matTooltip="Ver Venta" >
+                                    <svg style="color: rgb(141, 216, 254) ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                    </svg>
+                                </button>
+                                <button class = "editbtn" (click)="imprimirTicket(element.folioventa)" matTooltip="Reimprimir Ticket" >
+                                    <svg style="color: rgb(141, 216, 254) ;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"/>
+                                    </svg>
+                                </button>  
+                            }
+                        }
+                    </div>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnasDesplegadas; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: columnasDesplegadas; let i = index;" ></mat-row>
+        <!-- matTooltip="{{getDetalle(i)}}" matTooltipClass="multiline-tooltip" -->
+        </mat-table>
+    </cdk-virtual-scroll-viewport>
+    </div>
 </section>

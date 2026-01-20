@@ -1,8 +1,102 @@
 section{
     padding: 30px;
     color: aliceblue;
+    background-color: #21222D;
+}
+
+mat-card{
+    background-color: #21222D;
+}
+mat-table{
+    background-color: #21222D;
+    max-height: 550px;
+    overflow-y: auto;
 }
 
 h3{
     text-align: center;
+}
+
+@media (min-width: 1px) and (max-width: 1030px) {
+    section{
+     
+        width: 180%;
+      
+    }
+
+    mat-card{
+        width: 110%;
+        overflow-x: auto;
+        overflow-y: auto;
+    margin-left: 2%;
+    }
+mat-card-content{
+    width: 170%;
+}
+  }
+  @media (min-width: 1031px) and (max-width: 1400px) {
+  
+    section{
+     
+        width: 100%;
+      
+    }
+
+    mat-card{
+        width: 110%;
+        overflow-x: auto;
+    margin-left: 5px;
+    }
+mat-card-content{
+    width: 170%;
+}
+  }
+
+  
+
+  .editbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+
+.elibtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.Prbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.Grbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
 }

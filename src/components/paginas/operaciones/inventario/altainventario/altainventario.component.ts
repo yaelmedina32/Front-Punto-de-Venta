@@ -9,6 +9,8 @@ import { map, startWith } from 'rxjs/operators'
 import { MatDialog } from '@angular/material/dialog';
 import swal from 'sweetalert';
 import { ModPreciosVentaComponent } from './mod-precios-venta/mod-precios-venta.component';
+import { Router } from 'express';
+import { ActivatedRoute } from '@angular/router';
 
 export interface DatosOrdenCompra{
   ordencompraid: number;
@@ -45,14 +47,13 @@ export interface Ubicaciones{
 
 
 @Component({
-  selector: 'app-altainventario',
-  standalone: true,
-  imports: [CompartidosModule],
-  providers: [
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
-  ],
-  templateUrl: './altainventario.component.html',
-  styleUrl: './altainventario.component.css'
+    selector: 'app-altainventario',
+    imports: [CompartidosModule],
+    providers: [
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }
+    ],
+    templateUrl: './altainventario.component.html',
+    styleUrl: './altainventario.component.css'
 })
 
 export class AltainventarioComponent implements OnInit{
@@ -72,10 +73,17 @@ export class AltainventarioComponent implements OnInit{
   almacenId = 0;
 
 
-  constructor(private api: ApiService, private dialog: MatDialog){  
+  constructor(private api: ApiService, private dialog: MatDialog, private route: ActivatedRoute){  
     if (typeof window !== 'undefined') {
       this.almacenId = parseInt(localStorage.getItem('almacenId') || '0')
     }
+    this.route.queryParams.subscribe((params) => {
+      console.log(params);
+      if(params['oc']){
+        this.ocCapturada.setValue(params['oc']);
+        this.buscarOC();
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -84,6 +92,7 @@ export class AltainventarioComponent implements OnInit{
   }
 
   inventarearTodo(){
+    console.log(this.ocSeleccionada)
     swal({title: 'Guardar todos los productos', 
       text: '¿Seguro que desea poner todo en inventario? Posteriormente se tendrán que colocar los DOTS para mejorar la administración de estos mismos.',
       buttons: ['No', 'Si'],
@@ -93,7 +102,7 @@ export class AltainventarioComponent implements OnInit{
       if(response){
         const dialog = this.dialog.open(ModPreciosVentaComponent, {
           data: this.ocSeleccionada,
-          width: '1500px',
+          maxWidth: '1500px',
         });
         dialog.afterClosed().subscribe((response) => {
           this.ocSeleccionada.forEach((producto) => {
@@ -111,8 +120,8 @@ export class AltainventarioComponent implements OnInit{
           this.dataSource.data.forEach((row: any) => {
             row['ordencompraid'] = this.ocSeleccionada[0]['ordencompraid'];
           })
+          console.log(this.dataSource.data);
           this.api.insertarDatos('administracion/inventario', this.dataSource.data).subscribe((response) => {
-            swal("Productos Inventareados.", "Se guardaron correctamente los productos al inventario", "success");
             this.obtenerUbicaciones();
             this.dataSource.data = [];
           })
@@ -154,7 +163,6 @@ export class AltainventarioComponent implements OnInit{
           row['ordencompraid'] = this.ocSeleccionada[0]['ordencompraid'];
         })
         this.api.insertarDatos('administracion/inventario', this.dataSource.data).subscribe((response) => {
-          swal("Productos Inventareados.", "Se guardaron correctamente los productos al inventario", "success");
           this.obtenerUbicaciones();
           this.dataSource.data = [];
         })
@@ -178,10 +186,9 @@ export class AltainventarioComponent implements OnInit{
 
   buscarOC(){
     this.api.consultaDatos('administracion/detalle/ordencompra/' + this.ocCapturada.value).subscribe((ordencompra: Array<DatosOrdenCompra>) =>{
+      console.log( ordencompra)
       this.ocSeleccionada = ordencompra;
-      console.log(this.ocSeleccionada);
       this.almacenId = this.ocSeleccionada[0].almacenid;
-      console.log(this.almacenId);
       this.productosFiltrados = this.producto.valueChanges.pipe(
         startWith(''),
         map(value => this.filtrarProductos(value))
@@ -213,9 +220,6 @@ export class AltainventarioComponent implements OnInit{
     }
     const idproducto = this.ocSeleccionada.find(ele => this.dataSource.data[indice].nombreproducto == ele.nombreproducto)?.productoid;
     this.dataSource.data[indice].productoid = idproducto || 0;
-    this.api.consultaDatos(`operaciones/producto/ubicacion/${idproducto}/${this.almacenId}`).subscribe((ubicaciones: Array<any>) => {
-      this.dataSource.data[indice].ubicaciones = ubicaciones;
-    })
   }
 
   filtrarProductos(valor: string){

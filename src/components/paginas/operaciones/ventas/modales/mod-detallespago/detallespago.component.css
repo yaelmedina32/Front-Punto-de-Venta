@@ -10,8 +10,51 @@ h6{
 section{
     padding: 20px;
 }
-
+@media screen and (max-width:1000px) {
+    section{
+     
+        padding: 20px;
+        width: 250%;
+    }
+}
 mat-table{
     max-height: 40vh;
     overflow-y: auto;
+    overflow-x: auto;
+    background-color: #21222D;
+}
+section{
+    background-color: #21222D;;
+}
+::ng-deep .apliColor mat-form-field .mdc-text-field {
+    background-color: #171821 !important;
+    padding: 5px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    width: 12vw;
+  }
+  .elibtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorred{
+    color:rgb(255, 0, 0);
+}
+.Prbtn{ 
+    align-items: center;
+    padding: 10px 30px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+    color:  rgb(141, 216, 254);
 }

@@ -1,24 +1,37 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, Renderer2, ViewChild, viewChild } from '@angular/core';
 import { CompartidosModule } from '../../modulos/compartidos.module';
 import { FormControl } from '@angular/forms';
-import * as crypt from 'bcryptjs';
 import * as sjcl from 'sjcl';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import swal from 'sweetalert';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [CompartidosModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit{
   usuario = new FormControl();
   clave = new FormControl();
+  @ViewChild('input') input: any;
+  @ViewChild('form') form: any;
 
-  constructor(private api: ApiService, private router: Router){}
+  constructor(private api: ApiService, private router: Router, private renderer: Renderer2){}
+
+  ngAfterViewInit(): void {
+    this.renderer.listen(this.input.nativeElement, 'focus', () => {
+      this.renderer.addClass(this.form.nativeElement, 'focus');
+    });
+    this.renderer.listen(this.input.nativeElement, 'blur', () => {
+      this.renderer.removeClass(this.form.nativeElement, 'focus');
+    });
+  }
+
+  cambiarInput(){
+    this.input.nativeElement.type == 'text' ? this.renderer.setAttribute(this.input.nativeElement, 'type', 'password') : this.renderer.setAttribute(this.input.nativeElement, 'type', 'text');
+  }
 
   async login(){
     const bits = 256;
@@ -32,11 +45,8 @@ export class LoginComponent {
       clave: cifrado,
       key: key,
     };
-
-    console.log(datosEnviar);
     
     this.api.sesion(datosEnviar).subscribe((response: any) => {
-      console.log(response);
       if(!response.usuarioid){
         swal("Usuario Incorrecto", "El usuario que intentó no existe o la contraseña es incorrecta.", "error");
         return;
@@ -48,6 +58,8 @@ export class LoginComponent {
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('usuarioid', response.usuarioid);
         sessionStorage.setItem('nombreusuario', response.nombre);
+        sessionStorage.setItem('token', response.token);
+        console.log("token", response.token);
         this.router.navigate(['/inicio']);
       }
     })

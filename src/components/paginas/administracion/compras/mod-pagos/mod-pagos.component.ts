@@ -4,21 +4,21 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '../../../../services/api.service';
 import moment from 'moment';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-mod-pagos',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-pagos.component.html',
-  styleUrl: './mod-pagos.component.css'
+    selector: 'app-mod-pagos',
+    imports: [CompartidosModule],
+    templateUrl: './mod-pagos.component.html',
+    styleUrl: './mod-pagos.component.css'
 })
 export class ModPagosComponent implements OnInit{
   columnasDesplegadas = ['foliopago', 'fechapago', 'monto', 'ordencompraid'];
   dataSource = new MatTableDataSource<any>();
   total = 0.0;
   pendiente = 0.0;
-  
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private api:ApiService){}
+  isloading:boolean=false;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private api:ApiService,  private dialog: MatDialogRef<any>){}
 
   ngOnInit(): void { 
     this.cargarPagos()
@@ -35,18 +35,21 @@ export class ModPagosComponent implements OnInit{
   }
 
   guardarAbonos(){
-    const cuentaSaldada = this.dataSource.data.reduce((acum, actual) => acum += parseFloat(actual.monto), 0) >= this.total;
+    const cuentaSaldada = this.dataSource.data.reduce((acum, actual) => acum += parseFloat(actual.monto), 0) >= this.pendiente;
+    console.log(cuentaSaldada, this.dataSource.data.reduce((acum, actual) => acum += parseFloat(actual.monto), 0), this.pendiente)
     swal({title: `${this.dataSource.data.reduce((acum, actual) => acum += parseFloat(actual.monto), 0) >= this.total ? 'Saldar Cuenta' : 'Guardar Abonos'}`,
      text: '¿Seguro que desea guardar los abonos? \nSe actualizará el pendiente de la orden de compra', buttons: ['No', 'Si'], icon: "warning"})
       .then((response )=> {
+        this.isloading = true;
         if(response){
           this.dataSource.data.map((element) => {
             element.saldada = cuentaSaldada
           });
           this.api.insertarDatos('administracion/abonos', this.dataSource.data).subscribe((response) => {
-            swal("Datos insertados", "Se insertaron los pagos correctamente", "success");
+            this.isloading = false;
             this.cargarPagos();
             this.cargarOC();
+            this.dialog.close();
           })
         }
     })
@@ -55,7 +58,7 @@ export class ModPagosComponent implements OnInit{
   cargarOC(){
     this.api.consultaDatos('administracion/ordencompra/' + this.data.ordencompraid).subscribe((ordencompra) => {    
       this.total = ordencompra[0].importetotal;
-      this.pendiente = ordencompra[0].pendiente;
+      this.pendiente = parseFloat(ordencompra[0].pendiente || 0.00);
     })
   }
 

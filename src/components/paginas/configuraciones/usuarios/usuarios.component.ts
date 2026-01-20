@@ -6,9 +6,13 @@ import { FormControl, Validators } from '@angular/forms';
 import * as sjcl from 'sjcl';
 import { MatTableDataSource } from '@angular/material/table';
 import { SessionService } from '../../../services/session.service';
-import { ChangeDetectionStrategy, signal } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { response } from 'express';
+import { MatDialog } from '@angular/material/dialog';
+import { ModPasswordComponent } from './mod-password/mod-password.component';
+import { AfterViewInit, ViewChild, HostListener } from '@angular/core';
+import { MatTabGroup } from '@angular/material/tabs';
+
+
 export class Usuario{
   usuarioid: number;
   nombre: string;
@@ -33,6 +37,7 @@ export class Boton{
   botonId:number;
   nombreBoton:string;
   menuId: number;
+  descripcion: string;
   usuarioId: number;
   seleccionado: boolean;
   preseleccionado: boolean;
@@ -57,11 +62,10 @@ export class MenuConBotones {
 // }
 
 @Component({
-  selector: 'app-usuarios',
-  standalone: true,
-  imports: [CompartidosModule, MatExpansionModule],
-  templateUrl: './usuarios.component.html',
-  styleUrl: './usuarios.component.css'
+    selector: 'app-usuarios',
+    imports: [CompartidosModule, MatExpansionModule],
+    templateUrl: './usuarios.component.html',
+    styleUrl: './usuarios.component.css'
 })
 
 export class UsuariosComponent implements OnInit {
@@ -93,8 +97,9 @@ export class UsuariosComponent implements OnInit {
   dataSourceBotones = new MatTableDataSource<Boton>();
   asignaciones = [];
   columnasDesplegadas = ['nombre', 'asignado']
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-  constructor(private api: ApiService, private session: SessionService){}
+  constructor(private api: ApiService, private session: SessionService, private dialog: MatDialog){}
 
   ngOnInit(): void {
     this.session.validarSesion(this.menuId);
@@ -105,6 +110,30 @@ export class UsuariosComponent implements OnInit {
     this.obtenerUsuarios();
     this.obtenerEstatus();
   }
+  ngAfterViewInit(): void {
+    this.updateTabStretch();
+  }
+  actualizarUsuario(){
+    const datosEnviar = {
+      nombre: this.usuarioSeleccionado.nombre,
+      acceso: this.acceso.value,
+      email: this.email.value,
+      direccion: this.direccion.value,
+      estatusid: this.usuarioSeleccionado.estatusid,
+      usuarioid: this.usuarioSeleccionado.usuarioid,
+    }
+    this.api.modificarDatos('configuraciones/usuario', datosEnviar).subscribe((response) => {
+      this.obtenerUsuarios();
+    });
+  }
+
+  cambiarPassword(){
+    this.dialog.open(ModPasswordComponent, {
+      maxWidth: '40vW',
+      width: '100%',
+      data: {usuarioid: this.usuarioSeleccionado.usuarioid}
+    })
+  }
 
   guardarPermisos(){
     swal({title: 'Guardar Permisos', text: '¿Seguro que desea asignarle los permisos al usuario ' + this.usuario.value + '?', buttons: ['No', 'Si'], icon: "warning"}).then((response) => {
@@ -112,10 +141,9 @@ export class UsuariosComponent implements OnInit {
         this.dataSource.data.map((ele) => ele.usuarioid = this.usuarioSeleccionado.usuarioid);
         console.log('experimentando', this.dataSource.data)
         this.api.modificarDatos('configuraciones/permisos', this.dataSource.data).subscribe((response )=> {
-          swal("Datos modificados", "Se modificaron los datos correctamente", "success");
           if(localStorage.getItem('usuarioId') || 0 == this.usuarioSeleccionado['usuarioid']){
             window.location.reload();
-          }
+          }    window.location.reload();
         })
       }
     })
@@ -125,8 +153,6 @@ export class UsuariosComponent implements OnInit {
     this.api.consultaDatos('configuraciones/asignaciones/' + this.usuarioSeleccionado.usuarioid).subscribe((permisos: Array<Permiso>) => {
       this.permisoData = permisos;
       this.dataSource = new MatTableDataSource<Permiso>(permisos);
-      console.log("Datos del dataSource:", this.dataSource.data);
-      
     })
   }
 
@@ -154,7 +180,7 @@ export class UsuariosComponent implements OnInit {
           direccion: this.direccion.value,
         }
         this.api.insertarDatos('configuraciones/usuario', datosEnviar).subscribe((response) => {
-          swal("Datos Insertados", "Se insertó el usuario correctamente", "success");
+          this.obtenerUsuarios();
         })
       }
     })
@@ -202,7 +228,7 @@ export class UsuariosComponent implements OnInit {
 obtenerBotones(){
   console.log(this.dataSource.data);
   this.api.consultaDatos('configuraciones/botonesPermiso/' + this.usuarioSeleccionado.usuarioid).subscribe((Botones: Array<Boton>) => {
-    console.log(Botones);
+    console.log(" Estos son todos los botones que hay con todo",Botones);
     Botones.map(ele => ele.seleccionado = ele.usuarioId != 0);
     Botones.map(ele => ele.preseleccionado = ele.usuarioId != 0);
     const agrupadoPorMenuId = Botones.reduce((acumulador, boton) => {
@@ -266,13 +292,31 @@ guardarCambiosbtn(){
    if(response){ 
     this.botones.forEach((row) => {
       row.botones.map((ele: any) => ele.usuarioId = this.usuarioSeleccionado['usuarioid'])
-      console.log('Datosss',row);
     })
+    console.log(this.botones);
    this.api.modificarDatos('configuraciones/permisosbtn', this.botones).subscribe((response) => {
-     swal("Datos Insertados", "Se insertó el usuario correctamente", "success");
+     this.obtenerAsignaciones();
+     console.log("Recargando página...");
+     window.location.reload();
+
    })
    }
   })
  }
+
+
+
+ @HostListener('window:resize')
+  onResize() {
+    this.updateTabStretch();
+  }
+
+  updateTabStretch(): void {
+    if (window.innerWidth <= 1400) {
+      this.tabGroup.stretchTabs = false;  // Desactivar el estiramiento de los tabs
+    } else {
+      this.tabGroup.stretchTabs = true;   // Activar el estiramiento de los tabs
+    }
+  }
 }
 

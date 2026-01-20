@@ -4,11 +4,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CompartidosModule } from '../../../../../modulos/compartidos.module';
 
 @Component({
-  selector: 'app-mod-categorias',
-  standalone: true,
-  imports: [CompartidosModule],
-  templateUrl: './mod-categorias.component.html',
-  styleUrl: './mod-categorias.component.css'
+    selector: 'app-mod-categorias',
+    imports: [CompartidosModule],
+    templateUrl: './mod-categorias.component.html',
+    styleUrl: './mod-categorias.component.css'
 })
 export class ModCategoriasComponent implements OnInit{
   columnasDesplegadas = ['nombre', 'acciones']

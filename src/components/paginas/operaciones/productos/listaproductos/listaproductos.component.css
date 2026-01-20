@@ -1,32 +1,146 @@
 mat-card-content{
     width: 100%;
     max-height: 80vh;
-    overflow-x: auto;
+   
 }
 mat-card{
     width: 80vw;
+    background-color: #21222D;
+}
+@media screen and (max-width: 1380px) {
+    mat-card{
+        width: 80vw;
+        margin-left: 10%;
+
+    }
+}
+@media (min-width: 1px) and (max-width: 1000px) {
+    .datosOC{
+       
+        overflow-x: auto;
+        max-width: 100%;
+    }
+}
+@media (min-width: 1001px) and (max-width: 1100px) {
+    .datosOC{
+       
+        overflow-x: auto;
+        max-width: 100%;
+    }
 }
 
 mat-header-row{
     position: sticky;
+  
 }
 
 mat-table{
     max-height: 50vh;
     overflow-y: auto;
+    background-color: #21222D;
+
+}
+.actColor{
+    background-color: #21222D;
 }
 
-@media (max-width: 750px) {
-    mat-table{
-        width: 100vw;
-    }
+    @media (min-width: 1px) and (max-width: 600px) {
+        mat-table{
+            width: 310%;
+        }}   
+        @media (min-width: 601px) and (max-width: 1000px) {
+            mat-table{
+                width: 145%;
+            }} 
+    @media (min-width: 1001px) and (max-width: 1100px) {
+        mat-table{
+            width: 115%;
+        }}   
+
+    
+@media (max-width: 600px) {
+    
     mat-cell{
-        font-size: 2vw;
+        font-size: 3vw;
+        
     }
-    .botones{
-        overflow-x: scroll;
-    }
+  
     mat-cell button, mat-cell button svg{
         text-align: center;
     }
+}
+
+.elibtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+  }
+  .colorred{
+    color:rgb(255, 0, 0);
+  }
+  .Grbtn{
+    align-items: center;
+    padding: 8px 11px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    justify-content: center;
+  }
+  .colorGreen{
+    color: #82f06cd6;
+  }
+  .Prbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.downloadbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+.Cvbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f9d44058; 
+    border: 1px solid #fad028;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorYellow{
+    color: #fad028;
+}
+
+.historialbtn{
+    align-items: center;
+    padding: 5px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
 }

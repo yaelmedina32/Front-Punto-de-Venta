@@ -1,7 +1,87 @@
 section{
     width: 80vw;
+    background-color: #171821 !important;
 }
 
 h3{
     text-align: center;
+}
+mat-card{
+    width: 50%;
+    background-color: #21222D !important;
+}
+mat-table{
+    background-color: #21222D !important;
+}
+@media (min-width: 1px) and (max-width: 1400px) {
+    mat-card{
+        width: 200%;
+       justify-content: center;
+       margin-left: 15%;
+    }
+  }
+  .contenedor{
+    display: flex;
+    justify-content: center;
+}
+@media (min-width: 1px) and (max-width: 1400px) {
+    .contenedor{
+       
+        display: flex;
+        justify-content: center;
+    }
+  }
+  mat-card-content{
+    width: 100%;
+  }
+
+  
+.editbtn{
+    align-items: center;
+    padding: 7px 10px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorBlue{
+    color:rgb(141, 216, 254);
+}
+.elibtn{
+    align-items: center;
+    padding: 7px 10px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+.colorred{
+    color:rgb(255, 0, 0);
+}
+.Grbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #82f06c3b; 
+    border: 1px solid #82f06cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+.colorGreen{
+    color: #82f06cd6;
+}
+.Prbtn{
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(18, 129, 185, 0.447); 
+    border: 1px solid rgb(141, 216, 254);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
 }

@@ -1,46 +1,31 @@
-section{
-    width: 80vw;
+/* Estilos básicos para el componente refactorizado */
+.compras-container{
+  width: 100%;
+  overflow: hidden;
+  background-color: #21222D;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(129, 121, 121, 0.5);
 }
 
-#contenedorCompras{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.generar-oc{
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  transition: height 0.3s ease-in-out;
 }
 
-#opcionesProducto{
-    width: 140%;
+.compras-section{
+  min-height: 70dvh;
 }
 
-.sinInventario{
-    width: 60%;
+.generar-oc[hidden]{
+  height: 0;
 }
 
-mat-card-content{
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
+.generar-oc:not([hidden]){
+  min-height: 550px;
 }
 
-@media (max-width: 750px) {
-    mat-cell, mat-label{
-        font-size: 2vw;
-    }
-    
-    mat-table{
-        width: 100vw;
-    }
-    .datosOC{
-        width: 80vw;
-    }
-    .botones{
-        overflow-x: scroll;
-    }
-}
-
-.generaOC{
-    max-height: 60vh;
-}
-
-span{
-    color: aliceblue;
+.vista-compras{
+  max-width: 100%;
 }

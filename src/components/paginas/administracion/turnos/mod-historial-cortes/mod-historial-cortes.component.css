@@ -1,6 +1,7 @@
 
 section{
     padding: 30px;
+    background-color: #21222D;
 }
 
 h3{
@@ -11,4 +12,43 @@ h3{
 mat-table{
     max-height: 50vh;
     overflow-y: auto;
+    background-color: #21222D;
+}
+
+@media (min-width: 1px) and (max-width: 1200px) {
+    section{
+        width: 100%;
+    }
+    mat-table{
+        max-height: 50vh;
+        overflow-y: auto;
+        width: 220%;
+    }
+
+  }
+  .elibtn{
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(255, 0, 0, 0.142); 
+    border: 1px solid rgb(255, 0, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.excelbtn{
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(23, 153, 23, 0.253); 
+    border: 1px solid rgb(0, 128, 0);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    color: rgb(49, 163, 49);
+    transition: background-color 0.3s, border-color 0.3s; 
+}
+
+.colorred{
+    color:rgb(255, 0, 0);
 }
