@@ -41,3 +41,15 @@ and reflects scalable and maintainable architecture patterns with Angular 20.
 
 This project follows modern Angular patterns and good separation of concerns:
 
+```bash
+src/
+├── app/
+│ ├── core/ # Servicios globales, interceptores
+│ ├── shared/ # Componentes y pipes reutilizables
+│ ├── features/ # Módulos por feature (productos, ventas, auth)
+│ ├── app-routing.module.ts
+│ └── app.component.ts
+├── assets/
+├── environments/
+└── styles/
+```
